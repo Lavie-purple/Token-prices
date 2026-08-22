@@ -14,7 +14,7 @@ python -m http.server 8000
 
 ## 网页端
 
-# 浏览器打开 https://lavie-purple.github.io/Token-prices/
+浏览器打开 https://lavie-purple.github.io/Token-prices/
 
 ## 文件结构
 
