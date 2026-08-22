@@ -12,6 +12,10 @@ python -m http.server 8000
 
 > 直接双击 index.html 会被浏览器跨域策略拦截 fetch,请务必通过本地服务器打开。
 
+## 网页端
+
+# 浏览器打开 https://lavie-purple.github.io/Token-prices/
+
 ## 文件结构
 
 - `index.html` — 前端页面(搜索、地区筛选、点击表头排序、价格核验状态标记)
