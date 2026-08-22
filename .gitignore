@@ -1,0 +1,6 @@
+# 本地缓存与临时文件
+cache/*.html
+cache/_check.js
+data/update_report.md
+__pycache__/
+deploy-netlify.zip  

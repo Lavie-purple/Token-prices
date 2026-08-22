@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大模型 Token 价格汇总</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --amber: #d29922;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); padding: 24px; line-height: 1.5;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  @media (min-width: 1500px) { .wrap { max-width: 1560px; } }
+  @media (min-width: 1900px) { .wrap { max-width: 1800px; } }
+  header { margin-bottom: 20px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  header p { color: var(--muted); font-size: 14px; }
+  header p a { color: var(--accent); text-decoration: none; }
+  .controls {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .controls input[type="search"] {
+    flex: 1; min-width: 240px; padding: 9px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 14px;
+  }
+  .controls input[type="search"]:focus { outline: none; border-color: var(--accent); }
+  .controls select, .controls button {
+    padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); font-size: 14px; cursor: pointer;
+  }
+  .controls button.active { border-color: var(--accent); color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: #1c2129; color: var(--muted); font-weight: 600; cursor: pointer; user-select: none; white-space: nowrap; }
+  th:hover { color: var(--accent); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #1c212966; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .vendor { font-weight: 600; }
+  .vendor small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); color: var(--muted); margin-right: 4px; }
+  .tag.cn { color: #f0883e; border-color: #f0883e55; }
+  .tag.intl { color: var(--accent); border-color: #58a6ff55; }
+  .badge { font-size: 11px; padding: 1px 7px; border-radius: 999px; }
+  .badge.unverified { background: #d2992222; color: var(--amber); border: 1px solid #d2992255; }
+  .badge.verified { background: #3fb95022; color: var(--green); border: 1px solid #3fb95055; }
+  .note { color: var(--muted); font-size: 12px; }
+  .null { color: #484f58; }
+  .hist { color: #d29922; cursor: help; }
+  .preset {
+    padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--muted); font-size: 12px; cursor: pointer; margin: 2px 4px 2px 0;
+  }
+  .preset:hover { border-color: var(--accent); color: var(--accent); }
+  /* 窄屏:明细表转为卡片式布局 */
+  @media (max-width: 720px) {
+    #tbl thead { display: none; }
+    #tbl, #tbl tbody, #tbl tr, #tbl td { display: block; width: 100%; }
+    #tbl tr { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; padding: 8px 12px; background: var(--card); }
+    #tbl td { border: none; padding: 4px 0; }
+    #tbl td::before { content: attr(data-label); color: var(--muted); font-size: 12px; margin-right: 8px; }
+    #tbl td.vendor { font-size: 15px; }
+    #tbl td.vendor .tag { margin-right: 4px; }
+  }
+  footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
+  .vnote { background: #161b22; border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 12px; color: var(--muted); font-size: 13px; display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <h1 style="margin:0">大模型 Token 价格汇总</h1>
+      <button id="refresh" style="color:#57ab5a;border-color:#3fb95055;background:rgba(63,185,80,0.07);padding:5px 12px;font-size:13px">↻ 检查数据更新</button>
+      <button id="export" style="color:#e78a4e;border-color:#f0883e55;background:rgba(240,136,62,0.07);padding:5px 12px;font-size:13px">⬇ 导出 CSV</button>
+    </div>
+    <p style="margin-top:6px">每百万 tokens 价格 · 更新时间:<span id="updated">加载中…</span> · 数据来自各厂商官方定价页,<a id="updateLog" href="#">运行更新脚本刷新</a></p>
+  </header>
+
+  
+
+  <div class="vnote" id="vnote"></div>
+  <div class="vnote" id="newmodels" style="display:none;border-color:#d2992255"></div>
+
+  <div id="chartbox" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+      <b>四象限价格对比</b>
+      <span class="note">
+        <span style="color:#58a6ff">● 国际</span> <span style="color:#f0883e">● 国内</span>
+        · 对数刻度 · 左下=性价比优 · 点越大 AA 评分越高 · 密集区不标注名称,悬停查看 · <b>滚轮缩放 / 拖拽平移 / 双击复位</b>,放大后自动显示更多名称 · <span id="hiddennote"></span>
+      </span>
+    </div>
+    <svg id="chart" width="100%" height="440" style="display:block;margin-top:8px"></svg>
+  </div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="搜索厂商或模型,如 claude、deepseek、qwen…">
+    <select id="region">
+      <option value="all">全部地区</option>
+      <option value="intl">国际厂商</option>
+      <option value="cn">国内厂商</option>
+    </select>
+    <select id="verify">
+      <option value="all">全部状态</option>
+      <option value="verified">仅已核验</option>
+      <option value="unverified">仅待核验</option>
+    </select>
+    <select id="maxprice">
+      <option value="0">不限输入价</option>
+      <option value="1">输入价 ≤ ¥1</option>
+      <option value="5">输入价 ≤ ¥5</option>
+      <option value="10">输入价 ≤ ¥10</option>
+      <option value="20">输入价 ≤ ¥20</option>
+    </select>
+    <button data-mode="input">按输入价排序</button>
+    <button data-mode="output">按输出价排序</button>
+    
+    
+  </div>
+
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th data-key="vendor">厂商</th>
+        <th data-key="model">模型</th>
+        <th data-key="perf">性能评分</th>
+        <th data-key="ctx">上下文</th>
+        <th data-key="input">输入价</th>
+        <th data-key="cached">缓存输入</th>
+        <th data-key="output">输出价</th>
+        <th data-key="status">状态</th>
+        <th class="hide-sm" data-key="doc">API 文档</th>
+        <th class="hide-sm">特点 / 优势</th>
+        <th class="hide-sm">价格备注</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div id="calbox" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+      <b>成本计算器</b>
+      <span class="note">按每月 token 用量估算各模型月费用 · 含缓存命中时缓存输入价参与计算 · 缺缓存价的按输入价计算</span>
+    </div>
+    <div style="margin:2px 0 6px" class="note">
+      常用参考:中等规模应用(如每天数千次对话)每月约 <b>输入 100 / 输出 20</b> 百万 tokens,缓存命中率通常 <b>75%</b> 左右——对话类约 70%、Agent/编程类可达 85% 以上,一次性文档处理仅约 20%。
+      <button class="preset" data-in="100" data-out="20" data-cache="75">填入</button>
+    </div>
+    <div class="controls" style="margin:10px 0 6px">
+      <label class="note">输入量 <input type="number" id="calIn" value="100" min="0" step="10" style="width:80px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text)"> 百万 tokens/月</label>
+      <label class="note">输出量 <input type="number" id="calOut" value="20" min="0" step="5" style="width:70px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text)"> 百万 tokens/月</label>
+      <label class="note">缓存命中 <input type="number" id="calCache" value="75" min="0" max="100" step="5" style="width:60px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text)"> %</label>
+      <label class="note" style="margin-left:auto">筛选联动:<input type="checkbox" id="calFollow" checked> 仅计算当前筛选结果</label>
+      <label class="note">排序:
+        <select id="calSort" style="padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text)">
+          <option value="aa" selected>性能评分 AA(高→低)</option>
+          <option value="cost">月费用(低→高)</option>
+          <option value="value">性价比 AA/费用(高→低)</option>
+          <option value="ctx">上下文长度(长→短)</option>
+        </select>
+      </label>
+    </div>
+    <div id="calout" style="overflow-x:auto"></div>
+  </div>
+
+
+  <footer>
+    <p>提示:所有价格统一为 ¥/百万 tokens,国际厂商价格按汇率 <span id="rate"></span> 换算,以 <a id="srcLink" href="#">官方定价页</a> 为准。标记「待核验」的价格来自初始录入,可能已过期。橙色带 * 的价格为<span style="color:#d29922">最近一次历史数据</span>(当前未查到官方价格时的回退显示),图中以半透明虚线点表示。</p>
+  </footer>
+</div>
+
+<script>
+let DATA = null;
+const USD_TO_CNY = 7.2; // 汇率,可在 data/prices.json 的 exchange 下覆盖
+let sortKey = 'vendor';
+let sortDir = 1;
+
+function fmt(v, cur) {
+  if (v === null || v === undefined) return '<span class="null">—</span>';
+  if (v === 0) return '免费';
+  if (cur !== 'CNY') v = Math.round(v * (DATA?.exchange?.usdToCny || USD_TO_CNY) * 100) / 100; // 未标注货币默认 USD
+  return '¥' + v;
+}
+
+function fmtCtx(v) {
+  if (v == null) return '<span class="null">—</span>';
+  if (v >= 1000000) return (v % 1000000 ? (v / 1000000).toFixed(2) : v / 1000000) + 'M';
+  if (v >= 1000) return Math.round(v / 1000) + 'K';
+  return '' + v;
+}
+
+let HIST = null; // 最近一次历史快照 { 模型名: {input, cachedInput, output, _date} }
+const HIST_KEY = { input: 'input', cached: 'cachedInput', output: 'output' };
+
+function fmtHist(m, key, cur) {
+  // 价格为空时回退显示最近一次历史数据
+  const h = HIST && HIST[m.name];
+  if (h && h[HIST_KEY[key]] != null) {
+    return '<span class="hist" title="最近一次历史数据(' + (h._date || '未知日期') + '),当前未查到官方价格">¥'
+      + (cur !== 'CNY' ? Math.round(h[HIST_KEY[key]] * ((DATA && DATA.exchange && DATA.exchange.usdToCny) || 7.2) * 100) / 100 : h[HIST_KEY[key]])
+      + ' *</span>';
+  }
+  return '<span class="null">—</span>';
+}
+
+function render() {
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const region = document.getElementById('region').value;
+  const verify = document.getElementById('verify').value;
+  const maxprice = parseFloat(document.getElementById('maxprice').value);
+  const rate = (DATA && DATA.exchange && DATA.exchange.usdToCny) || USD_TO_CNY;
+  const toCny = (v, cur) => v == null ? null : (cur === 'USD' ? v * rate : v);
+  const rows = [];
+  const seenVendors = new Set();
+
+  for (const v of DATA.vendors) {
+    if (region !== 'all' && v.region !== region) continue;
+    const models = v.models.filter(m => {
+      if (q && !(v.name.toLowerCase().includes(q) || m.name.toLowerCase().includes(q))) return false;
+      if (verify === 'verified' && !m.verified) return false;
+      if (verify === 'unverified' && m.verified) return false;
+      if (maxprice > 0) {
+        const p = toCny(m.input, v.currency);
+        if (p === null || p > maxprice) return false;
+      }
+      return true;
+    });
+    if (!models.length) continue;
+    seenVendors.add(v.id);
+    for (const m of models) {
+      rows.push({ v, m });
+    }
+  }
+
+  const cur = rows.length ? (rows[0].v.currency || 'USD') : 'USD';
+  const sorters = {
+    vendor: () => {},
+    model: (a, b) => a.m.name.localeCompare(b.m.name) * sortDir,
+    perf: (a, b) => ((a.m.aa ?? -1) - (b.m.aa ?? -1)) * sortDir,
+    ctx: (a, b) => ((a.m.ctx ?? -1) - (b.m.ctx ?? -1)) * sortDir,
+    input: (a, b) => ((a.m.input ?? 1e9) - (b.m.input ?? 1e9)) * sortDir,
+    cached: (a, b) => ((a.m.cachedInput ?? 1e9) - (b.m.cachedInput ?? 1e9)) * sortDir,
+    output: (a, b) => ((a.m.output ?? 1e9) - (b.m.output ?? 1e9)) * sortDir,
+    status: (a, b) => ((a.m.verified ? 1 : 0) - (b.m.verified ? 1 : 0)) * sortDir,
+  };
+  rows.sort(sorters[sortKey] || sorters.vendor);
+
+  document.getElementById('tbody').innerHTML = rows.map(({ v, m }) => `
+    <tr>
+      <td class="vendor" data-label=""><span class="tag ${v.region}">${v.region === 'cn' ? '国内' : '国际'}</span>${v.name}</td>
+      <td data-label="模型:">${m.name}</td>
+      <td class="num" data-label="性能:">${m.aa != null ? '<b>' + m.aa + '</b><span class="null"> AA</span>' : '<span class="null">—</span>'}${m.swe != null ? '<br><span class="note">SWE ' + m.swe + '%</span>' : ''}</td>
+      <td class="num" data-label="上下文:">${fmtCtx(m.ctx)}</td>
+      <td class="num" data-label="输入价:">${m.input != null ? fmt(m.input, v.currency) : fmtHist(m, 'input', v.currency)}</td>
+      <td class="num" data-label="缓存输入:">${m.cachedInput != null ? fmt(m.cachedInput, v.currency) : fmtHist(m, 'cached', v.currency)}</td>
+      <td class="num" data-label="输出价:">${m.output != null ? fmt(m.output, v.currency) : fmtHist(m, 'output', v.currency)}</td>
+      <td data-label="状态:">${m.verified
+        ? '<span class="badge verified">已核验</span>'
+        : '<span class="badge unverified">待核验</span>'}</td>
+      <td class="hide-sm" data-label=""><a href="${v.source}" target="_blank" rel="noopener" style="color:var(--accent)">官方定价 ↗</a></td>
+      <td class="note hide-sm" style="color:var(--text)" data-label="特点:">${m.features || ''}</td>
+      <td class="note hide-sm" data-label="备注:">${m.note || v.note || ''}</td>
+    </tr>`).join('');
+
+  // 显示备注(若搜索后只剩一个厂商)
+  const vn = document.getElementById('vnote');  const first = rows[0];
+  if (first && first.v.note && seenVendors.size === 1) {
+    vn.textContent = first.v.note;
+    vn.style.display = 'block';
+    document.getElementById('srcLink').href = first.v.source;
+  } else {
+    vn.style.display = 'none';
+  }
+  drawChart(rows);
+  calcCost();
+}
+
+function calcCost() {
+  if (!DATA) return;
+  const qIn = Math.max(0, parseFloat(document.getElementById('calIn').value) || 0);
+  const qOut = Math.max(0, parseFloat(document.getElementById('calOut').value) || 0);
+  const cache = Math.min(100, Math.max(0, parseFloat(document.getElementById('calCache').value) || 0)) / 100;
+  const follow = document.getElementById('calFollow').checked;
+  const rate = (DATA.exchange && DATA.exchange.usdToCny) || 7.2;
+
+  // 获取参与计算的模型行:可联动上方筛选,或全部模型
+  let rows;
+  if (follow) {
+    const q = document.getElementById('q').value.trim().toLowerCase();
+    const region = document.getElementById('region').value;
+    rows = [];
+    for (const v of DATA.vendors) {
+      if (region !== 'all' && v.region !== region) continue;
+      for (const m of v.models)
+        if (!q || v.name.toLowerCase().includes(q) || m.name.toLowerCase().includes(q))
+          rows.push({ v, m });
+    }
+  } else {
+    rows = DATA.vendors.flatMap(v => v.models.map(m => ({ v, m })));
+  }
+
+  const r2 = x => v => v.currency === 'CNY' ? x : x * rate; // 未标注货币默认 USD
+  const results = rows
+    .filter(({ m }) => m.input != null && m.output != null)
+    .map(({ v, m }) => {
+      const cin = r2(m.input)(v), ccache = r2(m.cachedInput ?? m.input)(v), cout = r2(m.output)(v);
+      const cost = qIn * (1 - cache) * cin + qIn * cache * ccache + qOut * cout;
+      return { v, m, cost, usedCache: m.cachedInput == null && cache > 0 };
+    })
+    .filter(x => x.cost > 0 || qIn + qOut === 0);
+
+  const sortBy = document.getElementById('calSort').value;
+  if (sortBy === 'aa')
+    results.sort((a, b) => (b.m.aa ?? -1) - (a.m.aa ?? -1) || a.cost - b.cost);
+  else if (sortBy === 'value')
+    results.sort((a, b) => ((b.m.aa ?? 0) / b.cost) - ((a.m.aa ?? 0) / a.cost));
+  else if (sortBy === 'ctx')
+    results.sort((a, b) => (b.m.ctx ?? -1) - (a.m.ctx ?? -1) || a.cost - b.cost);
+  else
+    results.sort((a, b) => a.cost - b.cost);
+  const cheapest = results.reduce((m, x) => x.cost < m.cost ? x : m, results[0]);
+
+  const fmtCNY = n => n >= 10000 ? '¥' + (n / 10000).toFixed(2) + ' 万' : '¥' + Math.round(n).toLocaleString();
+  const shown = results.slice(0, 15);
+  const maxC = Math.max(...shown.map(x => x.cost), 1);
+  document.getElementById('calout').innerHTML = results.length ? `
+    <table style="font-size:13px">
+      <thead><tr><th>#</th><th>厂商</th><th>模型</th><th>AA</th><th style="text-align:right">预估月费用</th>${sortBy === 'value' ? '<th style="text-align:right">AA/¥</th>' : ''}<th style="width:26%">相对价格</th></tr></thead>
+      <tbody>${shown.map((x, i) => `
+        <tr${x === cheapest ? ' style="background:#3fb95018"' : ''}>
+          <td>${x === cheapest ? '🥇' : i + 1}</td>
+          <td>${x.v.name}</td>
+          <td>${x.m.name}${x.usedCache ? ' <span class="null" title="无缓存价,按输入价计">†</span>' : ''}</td>
+          <td>${x.m.aa ?? '—'}</td>
+          <td class="num" style="text-align:right;font-variant-numeric:tabular-nums"><b>${fmtCNY(x.cost)}</b>/月</td>
+          ${sortBy === 'value' ? `<td class="num" style="text-align:right">${(x.m.aa / x.cost).toFixed(3)}</td>` : ''}
+          <td><div style="background:#30363d;border-radius:4px;height:10px"><div style="background:${x === cheapest ? '#3fb950' : '#58a6ff'};border-radius:4px;height:10px;width:${Math.max(2, x.cost / maxC * 100)}%"></div></div></td>
+        </tr>`).join('')}</tbody>
+    </table>
+    <p class="note" style="margin-top:6px">共 ${results.length} 个模型参与计算,按当前所选排序显示前 15 名;🥇 为月费用最低的模型;† 表示该模型无缓存价、缓存部分按输入价计算。费用为标准档单价估算,不含 Batch 折扣、峰谷价与阶梯定价。</p>`
+    : '<p class="note" style="margin-top:6px">当前没有可计算的模型(需同时有输入价和输出价)。</p>';
+}
+
+['calIn', 'calOut', 'calCache', 'calFollow', 'calSort'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcCost));
+document.querySelectorAll('.preset').forEach(btn =>
+  btn.addEventListener('click', () => {
+    document.getElementById('calIn').value = btn.dataset.in;
+    document.getElementById('calOut').value = btn.dataset.out;
+    document.getElementById('calCache').value = btn.dataset.cache;
+    calcCost();
+  }));
+
+let VIEW = null; // 缩放状态:{x0,x1,y0,y1} 对数坐标域;null = 全图
+let CH = null;   // 最近一次绘图的坐标换算,供缩放交互使用
+let chartWired = false;
+
+function drawChart(rows) {
+  const svg = document.getElementById('chart');
+  const rate2 = (DATA && DATA.exchange && DATA.exchange.usdToCny) || 7.2;
+  const pts = rows
+    .map(({ v, m }) => {
+      const h = HIST && HIST[m.name];
+      const vi = m.input ?? (h ? h.input : null);
+      const vo = m.output ?? (h ? h.output : null);
+      return { name: m.name, vendor: v.name, region: v.region, aa: m.aa,
+        x: vi != null && vi > 0 ? (v.currency === 'CNY' ? vi : vi * rate2) : null,
+        y: vo != null && vo > 0 ? (v.currency === 'CNY' ? vo : vo * rate2) : null,
+        hist: (m.input == null && vi != null) || (m.output == null && vo != null) };
+    })
+    .filter(p => p.x != null && p.y != null);
+  if (!pts.length) { svg.innerHTML = '<text x="20" y="30" fill="#8b949e">当前筛选下没有可用数据点</text>'; return; }
+
+  const W = svg.clientWidth || 1000, H = 440;
+  const pad = { l: 56, r: 16, t: 16, b: 40 };
+  const xs = pts.map(p => Math.log10(p.x)), ys = pts.map(p => Math.log10(p.y));
+  let xmin, xmax, ymin, ymax;
+  if (VIEW && VIEW.x1 > VIEW.x0 && VIEW.y1 > VIEW.y0)
+    ({ x0: xmin, x1: xmax, y0: ymin, y1: ymax } = VIEW);
+  else {
+    xmin = Math.floor(Math.min(...xs)); xmax = Math.ceil(Math.max(...xs));
+    ymin = Math.floor(Math.min(...ys)); ymax = Math.ceil(Math.max(...ys));
+    VIEW = null;
+  }
+  const X = v => pad.l + (Math.log10(v) - xmin) / (xmax - xmin || 1) * (W - pad.l - pad.r);
+  const Y = v => H - pad.b - (Math.log10(v) - ymin) / (ymax - ymin || 1) * (H - pad.t - pad.b);
+  CH = {
+    X, Y, pts, pad, W, H,
+    ix: px => xmin + (px - pad.l) / (W - pad.l - pad.r) * (xmax - xmin),
+    iy: py => ymin + (H - pad.b - py) / (H - pad.t - pad.b) * (ymax - ymin),
+    x0: xmin, x1: xmax, y0: ymin, y1: ymax,
+  };
+
+  const med = a => { const s = [...a].sort((p, q) => p - q); return s[Math.floor(s.length / 2)]; };
+  const mx = med(pts.map(p => p.x)), my = med(pts.map(p => p.y));
+  // 缩放后只绘制当前视野内的点
+  const vis = pts.filter(p => {
+    const lx = Math.log10(p.x), ly = Math.log10(p.y);
+    return lx >= xmin - 0.001 && lx <= xmax + 0.001 && ly >= ymin - 0.001 && ly <= ymax + 0.001;
+  });
+
+  let g = '';
+  // 网格与刻度
+  for (let e = Math.ceil(xmin); e <= Math.floor(xmax); e++) {
+    const px = X(Math.pow(10, e));
+    g += `<line x1="${px}" y1="${pad.t}" x2="${px}" y2="${H - pad.b}" stroke="#30363d" stroke-dasharray="2 4"/>`
+       + `<text x="${px}" y="${H - pad.b + 16}" fill="#8b949e" font-size="11" text-anchor="middle">¥${Math.pow(10, e) >= 1 ? Math.pow(10, e) : Math.pow(10, e).toFixed(2)}</text>`;
+  }
+  for (let e = Math.ceil(ymin); e <= Math.floor(ymax); e++) {
+    const py = Y(Math.pow(10, e));
+    g += `<line x1="${pad.l}" y1="${py}" x2="${W - pad.r}" y2="${py}" stroke="#30363d" stroke-dasharray="2 4"/>`
+       + `<text x="${pad.l - 8}" y="${py + 4}" fill="#8b949e" font-size="11" text-anchor="end">¥${Math.pow(10, e) >= 1 ? Math.pow(10, e) : Math.pow(10, e).toFixed(2)}</text>`;
+  }
+  // 象限分隔线(中位数)+ 四角象限说明
+  g += `<line x1="${X(mx)}" y1="${pad.t}" x2="${X(mx)}" y2="${H - pad.b}" stroke="#d29922" stroke-dasharray="6 4"/>`
+     + `<line x1="${pad.l}" y1="${Y(my)}" x2="${W - pad.r}" y2="${Y(my)}" stroke="#d29922" stroke-dasharray="6 4"/>`
+     + `<text x="${pad.l + 8}" y="${H - pad.b - 8}" fill="#3fb950" font-size="12">◤ 双低价 · 性价比优</text>`
+     + `<text x="${W - pad.r - 8}" y="${H - pad.b - 8}" fill="#8b949e" font-size="12" text-anchor="end">高输入 · 低输出 ◢</text>`
+     + `<text x="${pad.l + 8}" y="${pad.t + 14}" fill="#8b949e" font-size="12">◤ 低输入 · 高输出</text>`
+     + `<text x="${W - pad.r - 8}" y="${pad.t + 14}" fill="#8b949e" font-size="12" text-anchor="end">双高价 ◥</text>`;
+
+  // 数据点
+  for (const p of vis) {
+    const r = p.aa != null ? 4 + p.aa / 12 : 4;
+    const c = p.region === 'cn' ? '#f0883e' : '#58a6ff';
+    const q = p.x <= mx && p.y <= my ? ' ◎双低' : '';
+    const fillO = p.hist ? 0.3 : 0.75; // 半透明 = 含历史回退数据
+    const r2c = n => '¥' + (Math.round(n * 100) / 100);
+    g += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${r}" fill="${c}" fill-opacity="${fillO}" stroke="${c}" ${p.hist ? 'stroke-dasharray="3 2"' : ''}>`
+       + `<title>${p.vendor} · ${p.name}\n输入 ${r2c(p.x)} / 输出 ${r2c(p.y)} 每百万tokens${p.hist ? '(含历史回退数据)' : ''}${p.aa != null ? '\nAA 智能指数 ' + p.aa : ''}${q}</title></circle>`;
+  }
+  // 标注模型名:AA 分高的先放(位置更优);密集簇内的点(60px 半径内 ≥4 个邻居)不标注,悬停可查看
+  const boxes = []; // 已放置的标签包围盒,用于避让
+  const overlaps = (x, y, w, h) => boxes.some(b =>
+    x < b.x + b.w && x + w > b.x && y < b.y + b.h && y + h > b.y);
+  const labelOrder = [...vis].sort((a, b) => (b.aa ?? -1) - (a.aa ?? -1));
+  const pos = new Map(vis.map(p => [p, { x: X(p.x), y: Y(p.y) }]));
+  let hidden = vis.length;
+  for (const p of labelOrder) {
+    const { x: px, y: py } = pos.get(p);
+    const neighbors = vis.reduce((n, q) => {
+      if (q === p) return n;
+      const d = pos.get(q);
+      return n + ((px - d.x) ** 2 + (py - d.y) ** 2 <= 42 * 42 ? 1 : 0);
+    }, 0);
+    if (neighbors >= 5) { continue; } // 密集簇,跳过标注
+    hidden--;
+    const tw = p.name.length * 11 + 4; // 近似文字宽度
+    const th = 13;
+    // 候选位置:[标签左上x, y, 锚点, 引线目标x, 引线目标y]
+    const cand = [
+      [px + 9, py - 11, 'start', px + 7, py - 4],   // 右上
+      [px + 9, py + 5, 'start', px + 7, py + 4],    // 右下
+      [px - 9 - tw, py - 11, 'end', px - 7, py - 4],// 左上
+      [px - 9 - tw, py + 5, 'end', px - 7, py + 4], // 左下
+      [px - tw / 2, py - 22, 'middle', px, py - 12],// 正上(引线)
+      [px - tw / 2, py + 12, 'middle', px, py + 12],// 正下(引线)
+      [px + 14, py - 26, 'start', px + 10, py - 22],// 远右上(引线)
+      [px + 14, py + 22, 'start', px + 10, py + 18],// 远右下(引线)
+      [px - 14 - tw, py - 26, 'end', px - 10, py - 22],
+      [px - 14 - tw, py + 22, 'end', px - 10, py + 18],
+    ];
+    let placed = null;
+    for (const c of cand) {
+      if (c[0] < pad.l - 20 || c[0] + tw > W - pad.r + 20 || c[1] < pad.t - 10 || c[1] + th > H - pad.b + 14) continue;
+      if (!overlaps(c[0], c[1], tw, th)) { placed = c; break; }
+    }
+    if (!placed) placed = cand[4]; // 全部重叠时放正上并接受遮挡
+    boxes.push({ x: placed[0], y: placed[1], w: tw, h: th });
+    const withLine = placed[3] !== px + 7 && placed[3] !== px - 7; // 非紧邻放置时画引线
+    if (withLine)
+      g += `<line x1="${px}" y1="${py}" x2="${placed[3]}" y2="${placed[4]}" stroke="#8b949e" stroke-width="0.8"/>`;
+    g += `<text x="${placed[2] === 'end' ? placed[0] + tw : placed[2] === 'middle' ? placed[0] + tw / 2 : placed[0]}" `
+       + `y="${placed[1] + 10}" fill="${p.aa != null ? '#e6edf3' : '#8b949e'}" font-size="10.5" text-anchor="${placed[2]}" ${withLine ? 'paint-order="stroke" stroke="#0d1117" stroke-width="3"' : ''}>${p.name}</text>`;
+  }
+
+  g += `<text x="${(W + pad.l) / 2}" y="${H - 6}" fill="#8b949e" font-size="12" text-anchor="middle">输入价(¥/百万 tokens,对数)</text>`
+     + `<text x="14" y="${(H - pad.b + pad.t) / 2}" fill="#8b949e" font-size="12" text-anchor="middle" transform="rotate(-90 14 ${(H - pad.b + pad.t) / 2})">输出价(¥/百万 tokens,对数)</text>`
+  const hn = document.getElementById('hiddennote');
+  if (hn) hn.textContent = hidden ? `当前 ${hidden} 个模型未标注名称` : '';
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = g;
+  svg.style.cursor = 'grab';
+
+  // 缩放/平移交互(只绑定一次):滚轮缩放、拖拽平移、双击复位
+  if (!chartWired) {
+    chartWired = true;
+    let dragging = null;
+    svg.addEventListener('wheel', e => {
+      if (!CH) return;
+      e.preventDefault();
+      const rect = svg.getBoundingClientRect();
+      const sx = W / rect.width;
+      const cx = CH.ix((e.clientX - rect.left) * sx), cy = CH.iy((e.clientY - rect.top) * sx);
+      const f = e.deltaY < 0 ? 0.8 : 1.25; // 缩放因子
+      const { x0, x1, y0, y1 } = CH;
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      const spanX = (x1 - x0) * f, spanY = (y1 - y0) * f;
+      const nx0 = clamp(cx - (cx - x0) * f, x0 - 1, x1 - 0.1);
+      const nx1 = clamp(nx0 + spanX, nx0 + 0.1, x1 + 1);
+      const ny0 = clamp(cy - (cy - y0) * f, y0 - 1, y1 - 0.1);
+      const ny1 = clamp(ny0 + spanY, ny0 + 0.1, y1 + 1);
+      VIEW = { x0: nx0, x1: nx1, y0: ny0, y1: ny1 };
+      render();
+    }, { passive: false });
+    svg.addEventListener('pointerdown', e => {
+      dragging = { x: e.clientX, y: e.clientY };
+      svg.setPointerCapture(e.pointerId);
+      svg.style.cursor = 'grabbing';
+    });
+    svg.addEventListener('pointermove', e => {
+      if (!dragging || !CH) return;
+      const rect = svg.getBoundingClientRect();
+      const sx = W / rect.width;
+      const dxLog = (e.clientX - dragging.x) * sx / (CH.W - CH.pad.l - CH.pad.r) * (CH.x1 - CH.x0);
+      const dyLog = (e.clientY - dragging.y) * sx / (CH.W - CH.pad.l - CH.pad.r) * (CH.y1 - CH.y0);
+      const { x0, x1, y0, y1 } = CH;
+      VIEW = { x0: x0 - dxLog, x1: x1 - dxLog, y0: y0 + dyLog, y1: y1 + dyLog };
+      dragging = { x: e.clientX, y: e.clientY };
+      render();
+    });
+    svg.addEventListener('pointerup', () => { dragging = null; svg.style.cursor = 'grab'; });
+    svg.addEventListener('dblclick', () => { VIEW = null; render(); });
+  }
+}
+
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('region').addEventListener('change', render);
+document.getElementById('verify').addEventListener('change', render);
+document.getElementById('maxprice').addEventListener('change', render);
+document.querySelectorAll('#tbl th').forEach(th =>
+  th.addEventListener('click', () => {
+    const k = th.dataset.key;
+    sortDir = (sortKey === k) ? -sortDir : 1;
+    sortKey = k;
+    render();
+  }));
+document.querySelectorAll('.controls button[data-mode]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    sortKey = btn.dataset.mode;
+    sortDir = 1;
+    document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }));
+
+function loadNewModels(bust) {
+  fetch('data/new_models.json' + (bust ? '?t=' + Date.now() : ''))
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      const el = document.getElementById('newmodels');
+      if (!d || !d.newModels || !d.newModels.length) { el.style.display = 'none'; return; }
+      el.innerHTML = '<b>⚠ 发现 ' + d.newModels.length + ' 个疑似新模型</b>(' + d.checkedAt + ' 检查):'
+        + d.newModels.map(m =>
+            '<span class="tag cn">' + m.vendor + ' · ' + m.name + '</span>').join('')
+        + '<br>请运行 scripts/update_prices.py 或人工核对后录入 data/prices.json。';
+      el.style.display = 'block';
+    }).catch(() => {});
+}
+
+function loadPrices(bust) {
+  fetch('data/prices.json' + (bust ? '?t=' + Date.now() : ''))
+    .then(r => r.json())
+    .then(d => {
+      DATA = d;
+      document.getElementById('updated').textContent = d.lastUpdated;
+      const rate = (d.exchange && d.exchange.usdToCny) || USD_TO_CNY;
+      document.getElementById('rate').textContent = '1 USD ≈ ' + rate + ' CNY';
+      render();
+    });
+}
+
+document.getElementById('refresh').addEventListener('click', () => {
+  loadPrices(true);
+  loadNewModels(true);
+});
+
+// 导出当前筛选结果为 CSV(带 BOM,Excel 中文不乱码;价格为换算后人民币)
+document.getElementById('export').addEventListener('click', () => {
+  if (!DATA) return;
+  const rate = (DATA.exchange && DATA.exchange.usdToCny) || 7.2;
+  const toCny = (x, cur) => x == null ? '' : (cur === 'CNY' ? x : Math.round(x * rate * 100) / 100);
+  const esc = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+  const head = ['厂商', '模型', 'AA智能指数', 'SWE-bench%', '上下文tokens',
+    '输入价¥/百万', '缓存输入¥/百万', '输出价¥/百万', '状态', '官方定价页', '特点/优势', '备注'];
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const region = document.getElementById('region').value;
+  const lines = [head.map(esc).join(',')];
+  for (const v of DATA.vendors) {
+    if (region !== 'all' && v.region !== region) continue;
+    for (const m of v.models) {
+      if (q && !(v.name.toLowerCase().includes(q) || m.name.toLowerCase().includes(q))) continue;
+      lines.push([v.name, m.name, m.aa ?? '', m.swe ?? '', m.ctx ?? '',
+        toCny(m.input, v.currency), toCny(m.cachedInput, v.currency), toCny(m.output, v.currency),
+        m.verified ? '已核验' : '待核验', v.source, m.features || '', m.note || v.note || '']
+        .map(esc).join(','));
+    }
+  }
+  const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'token-prices-' + DATA.lastUpdated + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+function loadHist() {
+  fetch('data/history/latest.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d) return;
+      HIST = {};
+      for (const v of (d.vendors || []))
+        for (const m of v.models)
+          HIST[m.name] = { ...m, _date: d.lastUpdated };
+      render();
+    }).catch(() => {});
+}
+
+loadNewModels(false);
+loadHist();
+
+fetch('data/prices.json')
+  .then(r => r.json())
+  .then(d => {
+    DATA = d;
+    document.getElementById('updated').textContent = d.lastUpdated;
+    const rate = (d.exchange && d.exchange.usdToCny) || USD_TO_CNY;
+    document.getElementById('rate').textContent = '1 USD ≈ ' + rate + ' CNY';
+    render();
+  })
+  .catch(() => {
+    document.getElementById('updated').textContent = '加载失败(请通过本地 HTTP 服务器打开,而非双击文件)';
+  });
+</script>
+</body>
+</html>

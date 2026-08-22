@@ -1,0 +1,29 @@
+name: 每日价格巡检
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 每天 UTC 02:00(北京时间 10:00)
+  workflow_dispatch: {}  # 支持手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 运行新模型发现脚本
+        run: python scripts/discover_new_models.py
+      - name: 运行价格更新脚本(抓快照+归档历史)
+        run: python scripts/update_prices.py
+      - name: 提交变更
+        run: |
+          git config user.name "price-bot"
+          git config user.email "actions@github.com"
+          git add data/ cache/ || true
+          git diff --cached --quiet && echo "无变更" && exit 0
+          git commit -m "chore: 每日价格巡检 $(date +%F)"
+          git push
