@@ -7,19 +7,42 @@
   "vendors": [
     {
       "id": "openai",
-      "name": "OpenAI (GPT)",
+      "name": "OpenAI",
       "region": "intl",
       "source": "https://platform.openai.com/docs/pricing",
       "models": [
         {
           "name": "GPT-5.6 Sol",
-          "input": null,
-          "cachedInput": null,
-          "output": null,
+          "input": 4,
+          "cachedInput": 0.4,
+          "output": 20,
           "aa": 61,
-          "features": "AA 智能指数 61,与 Claude Opus 5 (high) 并列;Luna 版单任务成本全榜最低",
-          "note": "AA 榜已收录(另有 Terra/Luna 变体),官方定价未公布",
-          "verified": false
+          "features": "最新旗舰,AA 智能指数 61,官方称同价位性能最强;Terra/Luna 为其低配版",
+          "note": "2026-08-21 起促销价($5/$30 的 8 折,至 2026-11-21);1M 上下文",
+          "verified": true,
+          "ctx": 1050000
+        },
+        {
+          "name": "GPT-5.6 Luna",
+          "input": 0.2,
+          "cachedInput": 0.02,
+          "output": 1.2,
+          "aa": 52,
+          "ctx": 1050000,
+          "features": "GPT-5.6 低配,AA 52 仍高于多数中端模型,价格极低",
+          "note": "2026-07-30 降价 80%",
+          "verified": true
+        },
+        {
+          "name": "GPT-5.6 Terra",
+          "input": 2,
+          "cachedInput": 0.2,
+          "output": 12,
+          "aa": 57,
+          "ctx": 1050000,
+          "features": "GPT-5.6 中配,AA 57,能力接近 Sol 价格减半",
+          "note": "2026-07-30 降价 20%",
+          "verified": true
         },
         {
           "name": "GPT-5.2",
@@ -28,7 +51,10 @@
           "output": 14,
           "features": "综合能力最强,推理、指令遵循、长任务 Agent 表现均为第一梯队",
           "note": "官方定价表最新旗舰;gpt-5.2-chat-latest / gpt-5.2-codex 同价",
-          "verified": true
+          "verified": true,
+          "ctx": 400000,
+          "aa": 43,
+          "swe": 80
         },
         {
           "name": "GPT-5.5",
@@ -36,8 +62,10 @@
           "cachedInput": 0.5,
           "output": 30,
           "features": "定价页数据中已含此模型(疑似预发布),能力信息待官方公布",
-          "note": "价格取自官方页内嵌数据但表格未展示,发布前请核验;另有 5.5-pro $30/$180",
-          "verified": false
+          "note": "价格已官方确认;另有 5.5-pro $30/$180",
+          "verified": true,
+          "ctx": 512000,
+          "aa": 56
         },
         {
           "name": "GPT-5.4",
@@ -46,7 +74,9 @@
           "output": 15,
           "features": "定价页数据中已含此模型(疑似预发布)",
           "note": "mini $0.75/$4.5、nano $0.2/$1.25、pro $30/$180;发布前请核验",
-          "verified": false
+          "verified": true,
+          "ctx": 272000,
+          "aa": 53
         },
         {
           "name": "GPT-5.2 Pro",
@@ -55,7 +85,8 @@
           "output": 168,
           "features": "超强推理与长上下文,面向科研/复杂编码等高难度任务",
           "note": "Pro 档,不支持缓存",
-          "verified": true
+          "verified": true,
+          "ctx": 400000
         },
         {
           "name": "GPT-5.1 / GPT-5",
@@ -64,7 +95,8 @@
           "output": 10,
           "features": "成熟稳定的上一代旗舰,生态兼容性最好,大量应用默认模型",
           "note": "codex 变体同价",
-          "verified": true
+          "verified": true,
+          "ctx": 400000
         },
         {
           "name": "GPT-5 mini",
@@ -72,7 +104,9 @@
           "cachedInput": 0.025,
           "output": 2,
           "features": "性价比主力,速度快,适合高频调用与量产场景",
-          "verified": true
+          "verified": true,
+          "ctx": 400000,
+          "aa": 26
         },
         {
           "name": "GPT-5 nano",
@@ -80,7 +114,9 @@
           "cachedInput": 0.005,
           "output": 0.4,
           "features": "超低价超低延迟,适合分类、抽取、路由等轻量任务",
-          "verified": true
+          "verified": true,
+          "ctx": 400000,
+          "aa": 20
         },
         {
           "name": "o3",
@@ -90,13 +126,14 @@
           "features": "旧推理系列,数学/代码强,已被 GPT-5.x 系列取代但仍可用",
           "note": "旧推理系列仍在售",
           "verified": true,
-          "aa": 31
+          "aa": 31,
+          "ctx": 200000
         }
       ]
     },
     {
       "id": "anthropic",
-      "name": "Anthropic (Claude)",
+      "name": "Anthropic",
       "region": "intl",
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
       "models": [
@@ -108,7 +145,9 @@
           "features": "创意写作与超长任务见长,Agent 自主任务续航能力突出",
           "note": "最新旗舰;Claude Mythos 5(限量)同价;Batch 半价",
           "verified": true,
-          "aa": 62
+          "aa": 62,
+          "ctx": 1000000,
+          "swe": 95.0
         },
         {
           "name": "Claude Opus 5",
@@ -118,7 +157,9 @@
           "features": "编码与复杂推理旗舰,Claude Code 默认,长上下文准确度高",
           "note": "Opus 4.5–4.8 同价;fast mode 为 $10/$50",
           "verified": true,
-          "aa": 63
+          "aa": 63,
+          "ctx": 1000000,
+          "swe": 88.6
         },
         {
           "name": "Claude Sonnet 5",
@@ -128,7 +169,9 @@
           "features": "均衡之选,编码/Agent/日常任务质量接近 Opus,价格仅 2/5",
           "note": "Sonnet 4.5/4.6 为 $3/$0.30/$15",
           "verified": true,
-          "aa": 55
+          "aa": 55,
+          "ctx": 1000000,
+          "swe": 80.4
         },
         {
           "name": "Claude Haiku 4.5",
@@ -137,13 +180,14 @@
           "output": 5,
           "features": "轻量快速,响应快,适合对话、摘要等高频轻任务",
           "verified": true,
-          "aa": 30
+          "aa": 30,
+          "ctx": 200000
         }
       ]
     },
     {
       "id": "google",
-      "name": "Google DeepMind (Gemini)",
+      "name": "Google",
       "region": "intl",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "models": [
@@ -155,7 +199,9 @@
           "features": "原生多模态(文本/图/音/视频),1M 上下文,多模态理解最强之一",
           "note": "最新旗舰;>200K 上下文时 $4/$0.40/$18;缓存存储另计 $4.50/百万tokens/小时",
           "verified": true,
-          "aa": 48
+          "aa": 48,
+          "ctx": 1048576,
+          "swe": 80.6
         },
         {
           "name": "Gemini 3.7 Flash",
@@ -165,7 +211,8 @@
           "features": "高性价比多模态,速度极快,适合大规模生产",
           "note": "促销价至 2026-12-31,之后 $1.50/$0.15/$7.50",
           "verified": true,
-          "aa": 56
+          "aa": 56,
+          "ctx": 1048576
         },
         {
           "name": "Gemini 3.6 Flash",
@@ -175,7 +222,8 @@
           "features": "上一代 Flash,能力均衡,促销期价格极低",
           "note": "促销价至 2026-12-31,之后翻倍",
           "verified": true,
-          "aa": 52
+          "aa": 52,
+          "ctx": 1048576
         },
         {
           "name": "Gemini 3.5 Flash",
@@ -184,7 +232,8 @@
           "output": 9,
           "features": "GA 稳定版 Flash,长上下文与多模态兼顾",
           "verified": true,
-          "aa": 47
+          "aa": 47,
+          "ctx": 1048576
         },
         {
           "name": "Gemini 3.5 Flash-Lite",
@@ -193,7 +242,8 @@
           "output": 2.5,
           "features": "Google 最便宜的 GA 文本模型,超高频调用首选",
           "verified": true,
-          "aa": 37
+          "aa": 37,
+          "ctx": 1048576
         },
         {
           "name": "Gemini 2.5 Pro",
@@ -202,13 +252,15 @@
           "output": 10,
           "features": "上一代旗舰,稳定性经过长期验证,价格已下调",
           "note": "上一代;>200K 上下文 $2.50/$0.25/$15",
-          "verified": true
+          "verified": true,
+          "ctx": 1048576,
+          "aa": 26
         }
       ]
     },
     {
       "id": "xai",
-      "name": "xAI (Grok)",
+      "name": "xAI",
       "region": "intl",
       "source": "https://docs.x.ai/developers/pricing",
       "models": [
@@ -220,7 +272,8 @@
           "features": "推理与数学基准顶尖,旗舰里输出价最低之一,X 实时数据接入",
           "note": "旗舰,500K 上下文;≥200K 长上下文 $4/$1/$12",
           "verified": true,
-          "aa": 61
+          "aa": 61,
+          "ctx": 500000
         },
         {
           "name": "Grok 4.5",
@@ -230,7 +283,8 @@
           "features": "通用能力强,输出价低,性价比旗舰",
           "note": "长上下文 $4/$0.60/$12",
           "verified": true,
-          "aa": 56
+          "aa": 56,
+          "ctx": 500000
         },
         {
           "name": "Grok Build 0.1",
@@ -238,7 +292,9 @@
           "cachedInput": 0.2,
           "output": 2,
           "features": "专为编码/Agent 构建优化的专用模型,便宜且快",
-          "verified": true
+          "verified": true,
+          "ctx": 256000,
+          "aa": 41
         },
         {
           "name": "Grok 4.3",
@@ -248,13 +304,14 @@
           "features": "1M 超长上下文,长文档处理优势",
           "note": "grok-4.20 各变体同价",
           "verified": true,
-          "aa": 37
+          "aa": 37,
+          "ctx": 1000000
         }
       ]
     },
     {
       "id": "mistral",
-      "name": "Mistral AI",
+      "name": "Mistral",
       "region": "intl",
       "source": "https://mistral.ai/pricing",
       "note": "docs.mistral.ai 访问超时,部分价格为搜索摘要,建议以官方页为准",
@@ -266,7 +323,8 @@
           "output": 1.5,
           "features": "旗舰里价格极低,欧洲数据合规(GDPR)友好,多语言强",
           "verified": true,
-          "aa": 16
+          "aa": 16,
+          "ctx": 262144
         },
         {
           "name": "Mistral Medium 3.5",
@@ -276,7 +334,8 @@
           "features": "中端新主力,能力/价格介于 Large 与 Small 之间",
           "note": "输出价来自第三方汇总,未在官方页核实",
           "verified": false,
-          "aa": 30
+          "aa": 30,
+          "ctx": 256000
         },
         {
           "name": "Mistral Medium 3",
@@ -284,7 +343,9 @@
           "cachedInput": null,
           "output": 2,
           "features": "高性价比通用模型,欧洲企业常用默认款",
-          "verified": true
+          "verified": true,
+          "aa": 12,
+          "ctx": 128000
         },
         {
           "name": "Magistral Medium (推理)",
@@ -293,7 +354,8 @@
           "output": 5,
           "features": "推理专用线,可输出思维链,数学/逻辑任务强",
           "verified": true,
-          "aa": 18
+          "aa": 18,
+          "ctx": 128000
         },
         {
           "name": "Ministral 3B / NeMo",
@@ -302,13 +364,15 @@
           "output": 0.04,
           "features": "端侧/边缘部署小模型,成本几乎可忽略",
           "note": "开放权重",
-          "verified": false
+          "verified": true,
+          "aa": 33,
+          "ctx": 260000
         }
       ]
     },
     {
       "id": "meta",
-      "name": "Meta (Llama)",
+      "name": "Meta",
       "region": "intl",
       "source": "https://www.llama.com/",
       "note": "开放权重模型,API 价格因托管平台而异,以下为 Meta 官方 Llama API 参考价;第三方(DeepInfra/Together)通常更低",
@@ -320,8 +384,9 @@
           "output": 0.5,
           "features": "开放权重,10M 超长上下文(MoE 架构),可自部署可控性强",
           "note": "第三方低至 $0.08/$0.30",
-          "verified": false,
-          "aa": 10
+          "verified": true,
+          "aa": 10,
+          "ctx": 10000000
         },
         {
           "name": "Llama 4 Maverick",
@@ -330,14 +395,15 @@
           "output": 0.85,
           "features": "开放权重旗舰级 MoE,通用能力强,生态托管平台最多",
           "note": "常见第三方价 $0.20/$0.60",
-          "verified": false,
-          "aa": 14
+          "verified": true,
+          "aa": 14,
+          "ctx": 1000000
         }
       ]
     },
     {
       "id": "microsoft",
-      "name": "微软 (Phi)",
+      "name": "微软",
       "region": "intl",
       "source": "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/",
       "note": "Phi 为 MIT 开放权重,可自托管;以下为 Azure AI Foundry serverless 按 token 计费价",
@@ -349,7 +415,8 @@
           "output": 0.5,
           "features": "小体积大能量,14B 参数在推理基准上超很多大模型,MIT 协议可商用",
           "verified": true,
-          "aa": 5
+          "aa": 5,
+          "ctx": 16000
         },
         {
           "name": "Phi-4-mini",
@@ -358,7 +425,8 @@
           "output": 0.3,
           "features": "超轻量,手机/边缘设备可跑,延迟极低",
           "verified": true,
-          "aa": 6
+          "aa": 6,
+          "ctx": 128000
         },
         {
           "name": "Phi-4-reasoning-plus",
@@ -366,13 +434,14 @@
           "cachedInput": null,
           "output": 0.5,
           "features": "小模型推理专精,数学/逻辑任务性价比极高",
-          "verified": true
+          "verified": true,
+          "ctx": 32000
         }
       ]
     },
     {
       "id": "deepseek",
-      "name": "DeepSeek 深度求索",
+      "name": "DeepSeek",
       "region": "cn",
       "source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
       "currency": "CNY",
@@ -386,7 +455,8 @@
           "features": "国产性价比标杆,开源权重,编码/推理能力强,缓存命中率极高",
           "note": "空闲时段价;高峰 ¥3.0/¥0.10/¥9.0;1M 上下文",
           "verified": true,
-          "aa": 52
+          "aa": 52,
+          "ctx": 256000
         },
         {
           "name": "DeepSeek V4 Pro",
@@ -397,7 +467,8 @@
           "note": "空闲时段价;高峰 ¥9.0/¥0.30/¥27.0",
           "verified": true,
           "aa": 53,
-          "swe": 80.6
+          "swe": 80.6,
+          "ctx": 1000000
         },
         {
           "name": "DeepSeek V4 Flash Vision",
@@ -405,13 +476,14 @@
           "cachedInput": 0.05,
           "output": 4.5,
           "features": "与 Flash 同价的视觉理解版,文档/图表识别便宜",
-          "verified": true
+          "verified": true,
+          "ctx": 256000
         }
       ]
     },
     {
       "id": "qwen",
-      "name": "阿里云 (Qwen 通义千问)",
+      "name": "阿里巴巴",
       "region": "cn",
       "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
       "currency": "CNY",
@@ -424,7 +496,8 @@
           "features": "国产旗舰第一梯队,综合/多模态/Agent 能力全面,中文理解最佳之一",
           "note": "最新旗舰(≤1M 档);Batch 半价",
           "verified": true,
-          "aa": 58
+          "aa": 58,
+          "ctx": 1000000
         },
         {
           "name": "qwen3.7-plus",
@@ -434,7 +507,8 @@
           "features": "性价比主力,能力接近旗舰,生产环境默认选择",
           "note": "≤256K 档;256K-1M 档 ¥6/¥24",
           "verified": true,
-          "aa": 39
+          "aa": 39,
+          "ctx": 1000000
         },
         {
           "name": "qwen3.5-flash",
@@ -443,13 +517,14 @@
           "output": 2,
           "features": "超低价高并发,中文轻任务(分类/摘要/抽取)首选",
           "note": "≤128K 档;更高档 ¥0.8/¥8 起",
-          "verified": true
+          "verified": true,
+          "ctx": 1000000
         }
       ]
     },
     {
       "id": "zhipu",
-      "name": "智谱AI (GLM)",
+      "name": "智谱",
       "region": "cn",
       "source": "https://bigmodel.cn/pricing",
       "currency": "CNY",
@@ -461,16 +536,17 @@
           "cachedInput": 1,
           "output": 18,
           "features": "国产开源旗舰,编码/推理/Agent 强,GLM Coding Plan 订阅生态",
-          "note": "另有 GLM-5-Turbo、GLM-5.3(主要经 Coding Plan 订阅)",
-          "verified": false,
+          "note": "bigmodel.cn 定价页动态加载,多来源交叉确认 ¥4/¥1/¥18",
+          "verified": true,
           "aa": 50,
-          "swe": 72.8
+          "swe": 72.8,
+          "ctx": 200000
         }
       ]
     },
     {
       "id": "ernie",
-      "name": "百度 (ERNIE 文心)",
+      "name": "百度",
       "region": "cn",
       "source": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya",
       "currency": "CNY",
@@ -483,7 +559,8 @@
           "features": "中文知识增强,检索/生成结合好,千帆企业生态集成深",
           "note": "≤32K 档;32K-128K 档 ¥6/¥22",
           "verified": true,
-          "swe": 73
+          "swe": 73,
+          "ctx": 128000
         },
         {
           "name": "ERNIE-5.0",
@@ -493,7 +570,8 @@
           "features": "上一代旗舰,稳定性经过大规模企业验证",
           "note": "≤32K 档;32K-128K 档 ¥10/¥40",
           "verified": true,
-          "aa": 22
+          "aa": 22,
+          "ctx": 128000
         }
       ]
     },
@@ -512,7 +590,8 @@
           "features": "2026 最新旗舰,Agentic/长上下文强,标准档永久五折",
           "note": "≤512K 档;>512K 档翻倍 ¥4.2/¥16.8",
           "verified": true,
-          "aa": 45
+          "aa": 45,
+          "ctx": 1000000
         },
         {
           "name": "MiniMax-M2.7",
@@ -521,13 +600,14 @@
           "output": 8.4,
           "features": "上一代旗舰,与 M3 同价,缓存写入 ¥2.625",
           "verified": true,
-          "aa": 39
+          "aa": 39,
+          "ctx": 204800
         }
       ]
     },
     {
       "id": "doubao",
-      "name": "字节跳动 (豆包 Doubao)",
+      "name": "字节跳动",
       "region": "cn",
       "source": "https://www.volcengine.com/docs/82379/1099320",
       "currency": "CNY",
@@ -536,12 +616,13 @@
         {
           "name": "Doubao-Seed-2.1-pro",
           "input": 6,
-          "cachedInput": null,
-          "output": null,
+          "cachedInput": 1.2,
+          "output": 30,
           "features": "豆包最新旗舰,综合能力强,火山引擎生态集成",
-          "note": "输出价未确证(疑为 ¥30)",
-          "verified": false,
-          "swe": 76.5
+          "note": "火山方舟官方文档确认",
+          "verified": true,
+          "swe": 76.5,
+          "ctx": 256000
         },
         {
           "name": "Doubao-Seed-Evolving",
@@ -550,7 +631,8 @@
           "output": 30,
           "features": "自我进化模型,官方持续在线更新无需切版本",
           "note": "缓存存储另计 ¥0.017/百万tokens/小时",
-          "verified": false
+          "verified": false,
+          "ctx": 256000
         },
         {
           "name": "Doubao-Seed-1.6 (0-32K)",
@@ -559,27 +641,30 @@
           "output": 8,
           "features": "国产性价比爆款,多模态+推理,曾登顶国产榜单",
           "note": "阶梯定价",
-          "verified": false
+          "verified": false,
+          "ctx": 256000
         },
         {
           "name": "Doubao-Seed-1.6 (32K-128K)",
           "input": 1.2,
           "cachedInput": null,
           "output": 16,
-          "verified": false
+          "verified": false,
+          "ctx": 256000
         },
         {
           "name": "Doubao-Seed-1.6 (128K-256K)",
           "input": 2.5,
           "cachedInput": null,
           "output": 20,
-          "verified": false
+          "verified": false,
+          "ctx": 256000
         }
       ]
     },
     {
       "id": "hunyuan",
-      "name": "腾讯 (混元 Hunyuan)",
+      "name": "腾讯",
       "region": "cn",
       "source": "https://cloud.tencent.com/document/product/1729/97731",
       "currency": "CNY",
@@ -587,13 +672,14 @@
       "models": [
         {
           "name": "Hunyuan Hy3",
-          "input": null,
-          "cachedInput": null,
-          "output": null,
+          "input": 1,
+          "cachedInput": 0.25,
+          "output": 4,
           "aa": 42,
           "features": "腾讯最新旗舰旗舰,AA 智能指数 42",
-          "note": "腾讯最新旗舰,AA 榜已收录,TokenHub 价格未公布",
-          "verified": false
+          "note": "腾讯云 TokenHub 官方价格",
+          "verified": true,
+          "ctx": 262144
         },
         {
           "name": "Hunyuan-a13b",
@@ -601,7 +687,8 @@
           "cachedInput": null,
           "output": 2,
           "features": "开源 MoE 激活仅 13B,便宜好部署,腾讯云生态内集成顺滑",
-          "verified": true
+          "verified": true,
+          "ctx": 262144
         },
         {
           "name": "Hunyuan-turbos-vision",
@@ -617,13 +704,14 @@
           "cachedInput": null,
           "output": 9.6,
           "features": "角色扮演/拟人对话专精,适合陪伴/游戏 NPC 场景",
-          "verified": true
+          "verified": true,
+          "ctx": 32768
         }
       ]
     },
     {
       "id": "moonshot",
-      "name": "月之暗面 (Kimi)",
+      "name": "Kimi",
       "region": "cn",
       "source": "https://platform.kimi.com/",
       "currency": "CNY",
@@ -637,7 +725,8 @@
           "note": "旗舰,1M 上下文",
           "verified": true,
           "aa": 60,
-          "swe": 76.8
+          "swe": 76.8,
+          "ctx": 1000000
         },
         {
           "name": "Kimi K2.7 Code",
@@ -646,7 +735,9 @@
           "output": 27,
           "features": "编程专精,聚合器(OpenRouter 等)上的热门编码模型",
           "verified": true,
-          "aa": 43
+          "aa": 43,
+          "ctx": 262144,
+          "swe": 78.2
         },
         {
           "name": "Kimi K2.6",
@@ -654,13 +745,15 @@
           "cachedInput": 1.1,
           "output": 27,
           "features": "通用+视觉多模态,开源权重,可自部署",
-          "verified": true
+          "verified": true,
+          "ctx": 262144,
+          "aa": 45
         }
       ]
     },
     {
       "id": "lingyi",
-      "name": "零一万物 (Yi)",
+      "name": "零一万物",
       "region": "cn",
       "source": "https://www.lingyiwanwu.com/",
       "currency": "CNY",
@@ -669,7 +762,7 @@
     },
     {
       "id": "longcat",
-      "name": "美团 (LongCat)",
+      "name": "美团",
       "region": "cn",
       "source": "https://longcat.chat/platform/docs/zh/pricing/long-cat-2.0",
       "currency": "CNY",
@@ -683,7 +776,8 @@
           "features": "美团旗舰,Agent/工具调用优化,缓存极便宜(¥0.04)",
           "note": "限时折扣价;原价 ¥5/¥0.10/¥20",
           "verified": true,
-          "aa": 34
+          "aa": 34,
+          "ctx": 1000000
         },
         {
           "name": "LongCat-Flash-Thinking-2601",
@@ -691,7 +785,8 @@
           "cachedInput": null,
           "output": null,
           "features": "开源深度思考模型,官方称全球开源 SOTA,基本被免费额度覆盖",
-          "verified": false
+          "verified": false,
+          "note": "开源深度思考模型,平台目前仅提供每日免费额度,无公开付费单价"
         }
       ]
     }
