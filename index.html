@@ -268,7 +268,7 @@ function render() {
       <td data-label="状态:">${m.verified
         ? '<span class="badge verified">已核验</span>'
         : '<span class="badge unverified">待核验</span>'}</td>
-      <td class="hide-sm" data-label=""><a href="${v.source}" target="_blank" rel="noopener" style="color:var(--accent)">官方定价 ↗</a></td>
+      <td class="hide-sm" data-label=""><a href="${v.source}" target="_blank" rel="noopener" style="color:var(--accent);white-space:nowrap">官方定价 ↗</a></td>
       <td class="note hide-sm" style="color:var(--text)" data-label="特点:">${m.features || ''}</td>
       <td class="note hide-sm" data-label="备注:">${m.note || v.note || ''}</td>
     </tr>`).join('');
