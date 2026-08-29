@@ -1,5 +1,12 @@
 {
-  "checkedAt": "2026-08-27",
-  "newModels": [],
+  "checkedAt": "2026-08-29",
+  "newModels": [
+    {
+      "vendor": "Google",
+      "vendorId": "google",
+      "name": "gemini-31-pro-preview-customtools",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  ],
   "errors": []
 }
