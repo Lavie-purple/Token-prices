@@ -382,7 +382,8 @@ function drawChart(rows) {
     .filter(p => p.x != null && p.y != null);
   if (!pts.length) { svg.innerHTML = '<text x="20" y="30" fill="#8b949e">当前筛选下没有可用数据点</text>'; return; }
 
-  const W = svg.clientWidth || 1000, H = 440;
+  const isFs = !!document.fullscreenElement;
+  const W = svg.clientWidth || 1000, H = isFs ? svg.clientHeight - 8 : 440;
   const pad = { l: 56, r: 16, t: 16, b: 40 };
   const xs = pts.map(p => Math.log10(p.x)), ys = pts.map(p => Math.log10(p.y));
   let xmin, xmax, ymin, ymax;
@@ -596,7 +597,7 @@ document.addEventListener('keydown', e => {
   if ((e.key === 'f' || e.key === 'F') && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))
     document.getElementById('chartFs').click();
 });
-document.addEventListener('fullscreenchange', () => setTimeout(render, 50));
+document.addEventListener('fullscreenchange', () => setTimeout(render, 200));
 
 // 导出当前筛选结果为 CSV(带 BOM,Excel 中文不乱码;价格为换算后人民币)
 document.getElementById('export').addEventListener('click', () => {
