@@ -528,7 +528,7 @@
       "region": "cn",
       "source": "https://bigmodel.cn/pricing",
       "currency": "CNY",
-      "note": "bigmodel.cn 定价页为动态加载,价格来自搜索摘要,建议以官网为准",
+      "note": "当前数据基于阿里云百炼官方价格(bigmodel.cn 动态加载);GLM-5.1 2026-08 下旬上线",
       "models": [
         {
           "name": "GLM-5",
@@ -541,6 +541,36 @@
           "aa": 50,
           "swe": 72.8,
           "ctx": 200000
+        },
+        {
+          "name": "GLM-5.1 (思考)",
+          "input": 16,
+          "cachedInput": null,
+          "output": 56,
+          "note": "思考模式 阿里云百炼官方价格;AA 智能指数 58",
+          "features": "智谱最新旗舰,思考推理最强档;AA 58 与 qwen3.8-max 并列国内第一",
+          "verified": true,
+          "aa": 58
+        },
+        {
+          "name": "GLM-5.1 (非思考)",
+          "input": 6,
+          "cachedInput": null,
+          "output": 24,
+          "note": "阿里云百炼官方价格;AA 智能指数 58",
+          "features": "智谱最新非思考档,价格与 GLM-5 持平但能力升级",
+          "verified": true,
+          "aa": 58
+        },
+        {
+          "name": "GLM-4.7",
+          "input": 3,
+          "cachedInput": null,
+          "output": 14,
+          "note": "阿里云百炼官方价格;AA 智能指数 47",
+          "features": "智谱上一代主力,AA 47 价格更便宜",
+          "verified": true,
+          "aa": 47
         }
       ]
     },

@@ -14,11 +14,22 @@
 - 发现的新模型只是名称候选,价格和特性需要人工补充到 prices.json。
 """
 import json
+import os
 import re
 import sys
 import urllib.request
 from datetime import date
 from pathlib import Path
+
+# 国内访问 GitHub/各厂商定价页常需代理;脚本默认尝试本地 10808 端口
+if 'HTTP_PROXY' not in os.environ and not os.environ.get('CI'):
+    for cand in ('http://127.0.0.1:10808', 'http://127.0.0.1:7890', 'http://127.0.0.1:10809'):
+        try:
+            urllib.request.urlopen(urllib.request.Request(
+                'https://github.com', headers={'User-Agent': 'test'}), timeout=3).close()
+            break
+        except Exception:
+            os.environ['HTTP_PROXY'] = os.environ['HTTPS_PROXY'] = cand
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = ROOT / "data" / "prices.json"
