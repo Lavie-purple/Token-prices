@@ -3,7 +3,7 @@
   "exchange": {
     "usdToCny": 7.2
   },
-  "lastUpdated": "2026-08-29",
+  "lastUpdated": "2026-08-30",
   "vendors": [
     {
       "id": "openai",
