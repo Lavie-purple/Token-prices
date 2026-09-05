@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-04",
+  "checkedAt": "2026-09-05",
   "newModels": [
     {
       "vendor": "OpenAI",
@@ -36,48 +36,6 @@
       "vendorId": "google",
       "name": "gemini-31-pro-preview-customtools",
       "source": "https://ai.google.dev/gemini-api/docs/pricing"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-pro-32k",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-seed3d-2.0",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-seedance-2.5",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-seedream-4-0",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-seedream-4-5",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-seedream-5-0-lite",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
-    },
-    {
-      "vendor": "字节跳动",
-      "vendorId": "doubao",
-      "name": "doubao-seedream-5-0-pro",
-      "source": "https://www.volcengine.com/docs/82379/1099320"
     }
   ],
   "errors": []
