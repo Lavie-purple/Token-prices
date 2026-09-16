@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-15",
+  "checkedAt": "2026-09-16",
   "newModels": [
     {
       "vendor": "OpenAI",
@@ -34,6 +34,18 @@
     {
       "vendor": "Google",
       "vendorId": "google",
+      "name": "gemini-3.8-live",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "vendor": "Google",
+      "vendorId": "google",
+      "name": "gemini-3.8-live-extended-thinking",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "vendor": "Google",
+      "vendorId": "google",
       "name": "gemini-31-pro-preview-customtools",
       "source": "https://ai.google.dev/gemini-api/docs/pricing"
     },
@@ -42,6 +54,48 @@
       "vendorId": "deepseek",
       "name": "deepseek-v4.1-flash",
       "source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-pro-32k",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-seed3d-2.0",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-seedance-2.5",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-seedream-4-0",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-seedream-4-5",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-seedream-5-0-lite",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
+    },
+    {
+      "vendor": "字节跳动",
+      "vendorId": "doubao",
+      "name": "doubao-seedream-5-0-pro",
+      "source": "https://www.volcengine.com/docs/82379/1099320"
     }
   ],
   "errors": []
