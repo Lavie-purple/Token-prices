@@ -68,6 +68,17 @@
           "aa": 56
         },
         {
+          "name": "GPT-5.5 Pro",
+          "input": 30,
+          "cachedInput": null,
+          "output": 180,
+          "aa": null,
+          "ctx": 272000,
+          "features": "GPT-5.5 旗舰档,超强推理与长上下文,不支持缓存",
+          "note": "OpenAI 官方定价页确认;Pro 档价格 0/80",
+          "verified": true
+        },
+        {
           "name": "GPT-5.4",
           "input": 2.5,
           "cachedInput": 0.25,
@@ -148,6 +159,17 @@
           "aa": 62,
           "ctx": 1000000,
           "swe": 95.0
+        },
+        {
+          "name": "Claude Fable 5.1",
+          "input": 10,
+          "cachedInput": 1,
+          "output": 50,
+          "aa": 62,
+          "ctx": 1000000,
+          "features": "Fable 5 的优化版,价格和性能相同,Anthropic 官方定价页已列出",
+          "note": "官方定价页确认:价格同 Fable 5 (0//0)",
+          "verified": true
         },
         {
           "name": "Claude Opus 5",
