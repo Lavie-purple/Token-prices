@@ -13,6 +13,7 @@
 - 建议配合系统计划任务定期运行(如每周一次)。
 """
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -25,6 +26,16 @@ CACHE_DIR = ROOT / "cache"
 REPORT_FILE = ROOT / "data" / "update_report.md"
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (token-price-tracker/1.0)"}
+
+# 从环境变量读取代理配置（GitHub Actions 需在 secrets 中设置 HTTP_PROXY/HTTPS_PROXY）
+_proxy_handler = None
+if os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY'):
+    _proxy_handler = urllib.request.ProxyHandler({
+        'http': os.environ.get('HTTP_PROXY'),
+        'https': os.environ.get('HTTPS_PROXY'),
+    })
+    _opener = urllib.request.build_opener(_proxy_handler)
+    urllib.request.install_opener(_opener)
 
 
 def fetch(url: str) -> str:

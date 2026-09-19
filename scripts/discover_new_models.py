@@ -21,7 +21,8 @@ import urllib.request
 from datetime import date
 from pathlib import Path
 
-# 国内访问 GitHub/各厂商定价页常需代理;脚本默认尝试本地 10808 端口
+# 代理配置:优先使用环境变量 HTTP_PROXY/HTTPS_PROXY(CI/CD 需在 secrets 配置)
+# 本地开发时若未设置环境变量,尝试常见本地代理端口
 if 'HTTP_PROXY' not in os.environ and not os.environ.get('CI'):
     for cand in ('http://127.0.0.1:10808', 'http://127.0.0.1:7890', 'http://127.0.0.1:10809'):
         try:
@@ -30,6 +31,15 @@ if 'HTTP_PROXY' not in os.environ and not os.environ.get('CI'):
             break
         except Exception:
             os.environ['HTTP_PROXY'] = os.environ['HTTPS_PROXY'] = cand
+
+# 安装代理处理器(若已通过环境变量设置)
+if os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY'):
+    _proxy_handler = urllib.request.ProxyHandler({
+        'http': os.environ.get('HTTP_PROXY'),
+        'https': os.environ.get('HTTPS_PROXY'),
+    })
+    _opener = urllib.request.build_opener(_proxy_handler)
+    urllib.request.install_opener(_opener)
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = ROOT / "data" / "prices.json"
