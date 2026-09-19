@@ -7,6 +7,6 @@ tunnels:
     # subdomain: your-custom-name
     # domain: your-domain.ngrok.dev
 
-authtoken: 这里填你的ngrok-authtoken
+authtoken: 3JYDEbukbbchpY7pDVOiRxWoOgP_43HJsG4Vosdm7rrqvtsCT
 metrics_addr: 127.0.0.1:4040
 log: stdout
