@@ -13,6 +13,8 @@ jobs:
     env:
       HTTP_PROXY: ${{ secrets.HTTP_PROXY }}
       HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
+      NO_PROXY: github.com,*.github.com,api.github.com,*.raw.githubusercontent.com
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

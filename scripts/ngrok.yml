@@ -1,0 +1,12 @@
+tunnels:
+  v2rayn:
+    addr: 10808
+    proto: http
+    name: v2rayn-proxy
+    # 取消注释以下两行可获取固定域名（需 ngrok 付费，免费版每次重启域名会变）
+    # subdomain: your-custom-name
+    # domain: your-domain.ngrok.dev
+
+authtoken: 这里填你的ngrok-authtoken
+metrics_addr: 127.0.0.1:4040
+log: stdout
