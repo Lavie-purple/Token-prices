@@ -448,12 +448,12 @@
       "note": "峰谷定价:高峰时段(9-12点、14-18点)价格为空闲时段的 2 倍",
       "models": [
         {
-          "name": "DeepSeek V4 Flash",
+          "name": "DeepSeek V4.1 Flash",
           "input": 1.5,
           "cachedInput": 0.05,
           "output": 4.5,
           "features": "国产性价比标杆,开源权重,编码/推理能力强,缓存命中率极高",
-          "note": "空闲时段价;高峰 ¥3.0/¥0.10/¥9.0;1M 上下文",
+          "note": "2026年9月官方更名，旧模型名 deepseek-v4-flash 已下线，请求将自动路由至 V4.1-Flash；价格不变",
           "verified": true,
           "aa": 52,
           "ctx": 256000
@@ -471,13 +471,14 @@
           "ctx": 1000000
         },
         {
-          "name": "DeepSeek V4 Flash Vision",
+          "name": "DeepSeek V4.1 Flash Vision",
           "input": 1.5,
           "cachedInput": 0.05,
           "output": 4.5,
           "features": "与 Flash 同价的视觉理解版,文档/图表识别便宜",
           "verified": true,
-          "ctx": 256000
+          "ctx": 256000,
+          "note": "视觉版，同样已并入 V4.1 系列；价格不变"
         }
       ]
     },
@@ -519,6 +520,28 @@
           "note": "≤128K 档;更高档 ¥0.8/¥8 起",
           "verified": true,
           "ctx": 1000000
+        },
+        {
+          "name": "qwen3.8-max-prime",
+          "input": 24,
+          "cachedInput": null,
+          "output": 72,
+          "aa": 58,
+          "ctx": 1000000,
+          "features": "Qwen3.8-Max 优速模式(Prime)，价格翻倍但推理速度显著提升",
+          "note": "阿里云百炼官方定价;标准档 ¥12/¥36",
+          "verified": true
+        },
+        {
+          "name": "qwen3.6-max-preview",
+          "input": 9,
+          "cachedInput": null,
+          "output": 27,
+          "aa": null,
+          "ctx": 128000,
+          "features": "Qwen3.6 预览版，介于 3.7 和 3.8 之间",
+          "note": "≤128K 档; AA 指数待官方公布",
+          "verified": true
         }
       ]
     },
@@ -618,7 +641,7 @@
           "cachedInput": 0.42,
           "output": 8.4,
           "features": "2026 最新旗舰,Agentic/长上下文强,标准档永久五折",
-          "note": "≤512K 档;>512K 档翻倍 ¥4.2/¥16.8",
+          "note": "标准档永久五折(原价¥4.2/¥16.8)，与M2.7同价",
           "verified": true,
           "aa": 45,
           "ctx": 1000000
