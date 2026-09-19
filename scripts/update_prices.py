@@ -52,6 +52,8 @@ def try_extract_prices(html: str):
 
 def main():
     only = sys.argv[1] if len(sys.argv) > 1 else None
+    # CI 环境下默认只跑国内厂商(无需代理)，传 --all 可跑全部
+    only_cn = '--all' not in sys.argv and not os.environ.get('RUN_ALL_VENDORS')
     CACHE_DIR.mkdir(exist_ok=True)
     data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     # 归档当前版本为历史快照(供前端在价格空白时回退显示)
@@ -66,6 +68,10 @@ def main():
     for vendor in data["vendors"]:
         vid = vendor["id"]
         if only and vid != only:
+            continue
+        if only_cn and vendor.get("region") != "cn":
+            report.append(f"## {vendor['name']} (跳过:需代理)")
+            report.append("")
             continue
         url = vendor.get("source", "")
         report.append(f"## {vendor['name']}\n- 定价页: {url}")

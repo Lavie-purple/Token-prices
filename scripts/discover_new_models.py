@@ -86,12 +86,17 @@ def fetch(url: str) -> str:
 
 def main():
     only = sys.argv[1] if len(sys.argv) > 1 else None
+    # CI 环境下默认只跑国内厂商(无需代理)，传 --all 可跑全部
+    only_cn = '--all' not in sys.argv and not os.environ.get('RUN_ALL_VENDORS')
     data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     result = {"checkedAt": date.today().isoformat(), "newModels": [], "errors": []}
 
     for vendor in data["vendors"]:
         vid = vendor["id"]
         if only and vid != only:
+            continue
+        if only_cn and vendor.get("region") != "cn":
+            result["errors"].append({"vendor": vendor["name"], "error": "跳过:国际厂商需代理"})
             continue
         pat = PATTERNS.get(vid)
         if not pat:
