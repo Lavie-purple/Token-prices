@@ -1,11 +1,59 @@
 {
-  "checkedAt": "2026-08-29",
+  "checkedAt": "2026-09-19",
   "newModels": [
+    {
+      "vendor": "OpenAI",
+      "vendorId": "openai",
+      "name": "gpt-6",
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    {
+      "vendor": "OpenAI",
+      "vendorId": "openai",
+      "name": "gpt-6-astra",
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    {
+      "vendor": "Anthropic",
+      "vendorId": "anthropic",
+      "name": "claude mythos 5.1",
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+    },
+    {
+      "vendor": "Google",
+      "vendorId": "google",
+      "name": "gemini 3.8",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "vendor": "Google",
+      "vendorId": "google",
+      "name": "gemini-3.8-flash",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "vendor": "Google",
+      "vendorId": "google",
+      "name": "gemini-3.8-live",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "vendor": "Google",
+      "vendorId": "google",
+      "name": "gemini-3.8-live-extended-thinking",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
     {
       "vendor": "Google",
       "vendorId": "google",
       "name": "gemini-31-pro-preview-customtools",
       "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "vendor": "DeepSeek",
+      "vendorId": "deepseek",
+      "name": "deepseek-v4.1-flash",
+      "source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
     }
   ],
   "errors": []
