@@ -1,8 +1,0 @@
-version: 2
-authtoken: 这里填你的ngrok-authtoken
-
-tunnels:
-  v2rayn:
-    addr: 10808
-    proto: http
-    name: v2rayn-proxy
