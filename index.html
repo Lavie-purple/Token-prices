@@ -365,6 +365,8 @@ document.querySelectorAll('.preset').forEach(btn =>
 let VIEW = null; // 缩放状态:{x0,x1,y0,y1} 对数坐标域;null = 全图
 let CH = null;   // 最近一次绘图的坐标换算,供缩放交互使用
 let chartWired = false;
+let chartObserved = false;
+let draggingFlag = false;
 
 function drawChart(rows) {
   const svg = document.getElementById('chart');
@@ -383,7 +385,8 @@ function drawChart(rows) {
   if (!pts.length) { svg.innerHTML = '<text x="20" y="30" fill="#8b949e">当前筛选下没有可用数据点</text>'; return; }
 
   const isFs = !!document.fullscreenElement;
-  const W = svg.clientWidth || 1000, H = isFs ? svg.clientHeight - 8 : 440;
+  const W = Math.round(svg.getBoundingClientRect().width) || 1000;
+  const H = isFs ? (svg.getBoundingClientRect().height - 8) || 440 : 440;
   const pad = { l: 56, r: 16, t: 16, b: 40 };
   const xs = pts.map(p => Math.log10(p.x)), ys = pts.map(p => Math.log10(p.y));
   let xmin, xmax, ymin, ymax;
@@ -491,7 +494,9 @@ function drawChart(rows) {
   const hn = document.getElementById('hiddennote');
   if (hn) hn.textContent = hidden ? `当前 ${hidden} 个模型未标注名称` : '';
 
+  // 元素高度与 viewBox 严格一致（宽度靠 width=100% 自适应），否则 SVG 等比缩放会留白
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('height', H);
   svg.innerHTML = g;
   svg.style.cursor = 'grab';
 
@@ -518,6 +523,7 @@ function drawChart(rows) {
     }, { passive: false });
     svg.addEventListener('pointerdown', e => {
       dragging = { x: e.clientX, y: e.clientY };
+      draggingFlag = true;
       svg.setPointerCapture(e.pointerId);
       svg.style.cursor = 'grabbing';
     });
@@ -532,8 +538,17 @@ function drawChart(rows) {
       dragging = { x: e.clientX, y: e.clientY };
       render();
     });
-    svg.addEventListener('pointerup', () => { dragging = null; svg.style.cursor = 'grab'; });
+    svg.addEventListener('pointerup', () => { dragging = null; draggingFlag = false; svg.style.cursor = 'grab'; });
     svg.addEventListener('dblclick', () => { VIEW = null; render(); });
+  }
+
+  // 容器尺寸变化时重绘，保证 viewBox 与实际宽度始终一致(否则宽屏会左右留白)
+  if (!chartObserved) {
+    chartObserved = true;
+    const box = document.getElementById('chartbox');
+    new ResizeObserver(() => {
+      if (!draggingFlag) render();
+    }).observe(box);
   }
 }
 
