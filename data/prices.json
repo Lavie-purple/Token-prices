@@ -3,7 +3,7 @@
   "exchange": {
     "usdToCny": 7.2
   },
-  "lastUpdated": "2026-09-25",
+  "lastUpdated": "2026-09-27",
   "vendors": [
     {
       "id": "openai",
@@ -419,10 +419,11 @@
           "cachedInput": null,
           "output": 7.5,
           "features": "中端新主力,能力/价格介于 Large 与 Small 之间",
-          "note": "输出价来自第三方汇总,未在官方页核实",
-          "verified": false,
+          "note": "官方价格 $1.5/$7.5 每百万 tokens(Batch 半价 $0.75/$3.75);经 OpenRouter 直连 Mistral 端点核实一致",
+          "verified": true,
           "aa": 30,
-          "ctx": 256000
+          "ctx": 256000,
+          "released": null
         },
         {
           "name": "Mistral Medium 3",
@@ -767,7 +768,7 @@
           "cachedInput": 1.2,
           "output": 30,
           "features": "豆包最新旗舰,综合能力强,火山引擎生态集成",
-          "note": "火山方舟官方文档确认",
+          "note": "火山方舟官方《模型价格》文档确认;缓存存储另计 ¥0.017/百万tokens/小时;上下文上限 1024K",
           "verified": true,
           "swe": 76.5,
           "ctx": 256000
@@ -778,35 +779,57 @@
           "cachedInput": 1.2,
           "output": 30,
           "features": "自我进化模型,官方持续在线更新无需切版本",
-          "note": "缓存存储另计 ¥0.017/百万tokens/小时",
-          "verified": false,
+          "note": "火山方舟官方《模型价格》文档确认;缓存存储另计 ¥0.017/百万tokens/小时;上下文上限 1024K",
+          "verified": true,
           "ctx": 256000
         },
         {
           "name": "Doubao-Seed-1.6 (0-32K)",
           "input": 0.8,
-          "cachedInput": null,
+          "cachedInput": 0.16,
           "output": 8,
           "features": "国产性价比爆款,多模态+推理,曾登顶国产榜单",
-          "note": "阶梯定价",
-          "verified": false,
+          "note": "官方模型详情页确认;输出长度 ≤0.2K 时输出仅 ¥2.00;已被 Seed 2.x 代取代,属存量模型",
+          "verified": true,
           "ctx": 256000
         },
         {
           "name": "Doubao-Seed-1.6 (32K-128K)",
           "input": 1.2,
-          "cachedInput": null,
+          "cachedInput": 0.16,
           "output": 16,
-          "verified": false,
-          "ctx": 256000
+          "verified": true,
+          "ctx": 256000,
+          "note": "官方模型详情页确认;★ 原记录 128K 档缓存价缺失,已补 ¥0.16"
         },
         {
           "name": "Doubao-Seed-1.6 (128K-256K)",
-          "input": 2.5,
-          "cachedInput": null,
-          "output": 20,
-          "verified": false,
-          "ctx": 256000
+          "input": 2.4,
+          "cachedInput": 0.16,
+          "output": 24,
+          "verified": true,
+          "ctx": 256000,
+          "note": "★ 价格勘误:原记录 ¥2.5/¥20 有误,官方为输入 ¥2.40 / 输出 ¥24.00;缓存 ¥0.16"
+        },
+        {
+          "name": "Doubao-Seed-2.1-lite",
+          "input": 0.8,
+          "cachedInput": 0.16,
+          "output": 2.7,
+          "features": "豆包 2.1 代轻量档,输出仅 ¥2.70,适合高并发轻任务",
+          "verified": true,
+          "ctx": 1048576,
+          "note": "火山方舟官方《模型价格》确认(2026-09);低优档约 5 折、批量推理同低优价"
+        },
+        {
+          "name": "Doubao-Seed-2.1-turbo",
+          "input": 3,
+          "cachedInput": 0.6,
+          "output": 15,
+          "features": "豆包 2.1 代速度档,提供低延迟(约 2 倍价)与低优(约 5 折)两种服务等级",
+          "verified": true,
+          "ctx": 1048576,
+          "note": "火山方舟官方《模型价格》确认(2026-09);低优档约 5 折、批量推理同低优价"
         }
       ]
     },
@@ -917,6 +940,16 @@
       "note": "模型开放权重,兼容 OpenAI/Anthropic 协议;平台每日免费额度最高约 5000 万 tokens",
       "models": [
         {
+          "name": "LongCat-2.5-Preview",
+          "input": 5,
+          "cachedInput": 0.1,
+          "output": 20,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "美团最新旗舰预览版,1M 上下文/最大输出 128K,按量计费仅支持它与 LongCat-2.0",
+          "note": "官方定价 ¥5/¥0.10/¥20;上线限时优惠 ¥2/¥0.04/¥8;计费为预充值余额实时扣减"
+        },
+        {
           "name": "LongCat-2.0",
           "input": 2,
           "cachedInput": 0.04,
@@ -933,12 +966,13 @@
           "cachedInput": null,
           "output": null,
           "features": "开源深度思考模型,官方称全球开源 SOTA,基本被免费额度覆盖",
-          "verified": false,
-          "note": "开源深度思考模型,平台目前仅提供每日免费额度,无公开付费单价"
+          "verified": true,
+          "note": "★ 官方更新日志:自 2026-05-29 起停止调用服务(与 Flash-Chat/Lite/Omni 同批下线);平台从未对其提供按量计费。开源权重仍可在 HuggingFace/GitHub 自行部署"
         }
       ]
     }
   ],
   "scoresNote": "aa = Artificial Analysis 智能指数(0-100,artificialanalysis.ai);swe = SWE-bench Verified(%)",
-  "newBadgeRule": "发布 30 天内显示「新」标记(released 字段 + 前端按当天日期动态计算,过期自动消失)。releasedSource 记录日期来源:官方公告优先,其次 Artificial Analysis 模型页"
+  "newBadgeRule": "发布 30 天内显示「新」标记(released 字段 + 前端按当天日期动态计算,过期自动消失)。releasedSource 记录日期来源:官方公告优先,其次 Artificial Analysis 模型页",
+  "verifiedNote": "verified=true 表示已在厂商官方定价页/官方文档核实(2026-09-27 集中核验);价格勘误历史见各条 note 中的 ★ 标记"
 }
