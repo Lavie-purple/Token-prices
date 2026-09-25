@@ -316,6 +316,7 @@ function render() {
   } else {
     vn.style.display = 'none';
   }
+  LAST_ROWS = rows;
   drawChart(rows);
   calcCost();
 }
@@ -405,6 +406,7 @@ let draggingFlag = false;
 let MODEL_BY_NAME = null; // 模型名 -> 模型对象(用于查 released 等元数据)
 function m0(name) { return (MODEL_BY_NAME && MODEL_BY_NAME[name]) || {}; }
 
+let LAST_ROWS = [];      // 最近一次筛选结果，供"只重绘画图"的轻量路径复用
 function drawChart(rows) {
   const svg = document.getElementById('chart');
   const rate2 = (DATA && DATA.exchange && DATA.exchange.usdToCny) || 7.2;
@@ -565,7 +567,7 @@ function drawChart(rows) {
       const ny0 = clamp(cy - (cy - y0) * f, y0 - 1, y1 - 0.1);
       const ny1 = clamp(ny0 + spanY, ny0 + 0.1, y1 + 1);
       VIEW = { x0: nx0, x1: nx1, y0: ny0, y1: ny1 };
-      render();
+      drawChart(LAST_ROWS);   // 同上：缩放只重绘画图
     }, { passive: false });
     svg.addEventListener('pointerdown', e => {
       e.preventDefault();            // 阻止拖拽时选中文本
@@ -592,7 +594,7 @@ function drawChart(rows) {
         VIEW = { x0: x0 - dxLog, x1: x1 - dxLog, y0: y0 + dyLog, y1: y1 + dyLog };
         dragging.dx = 0; dragging.dy = 0;
         dragging.raf = 0;
-        render();
+        drawChart(LAST_ROWS);   // 只重绘画图：拖拽不影响明细表/计算器，省去每帧重建 600+ 单元格
       });
     });
     const endDrag = () => {
