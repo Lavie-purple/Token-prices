@@ -3,11 +3,7 @@
   "exchange": {
     "usdToCny": 7.2
   },
-<<<<<<< HEAD
-  "lastUpdated": "2026-09-25",
-=======
   "lastUpdated": "2026-09-24",
->>>>>>> 479444d7f1f8935bbf0d5fdb246aaacd2894c72c
   "vendors": [
     {
       "id": "openai",
@@ -15,39 +11,6 @@
       "region": "intl",
       "source": "https://platform.openai.com/docs/pricing",
       "models": [
-        {
-          "name": "GPT-6 Sol",
-          "input": 2,
-          "cachedInput": 0.2,
-          "output": 10,
-          "aa": 48,
-          "ctx": 1050000,
-          "verified": true,
-          "features": "2026-09-22 发布的新一代主力,1M 上下文,长上下文(>272K)输入价翻倍、输出×1.5",
-          "note": "长上下文 >272K:输入$4/缓存$0.4/输出$15;Batch 五折;Fast 两倍;无限时促销"
-        },
-        {
-          "name": "GPT-6 Astra",
-          "input": 10,
-          "cachedInput": 1,
-          "output": 50,
-          "aa": 53,
-          "ctx": 1050000,
-          "verified": true,
-          "features": "2026-09-03 发布,目前最高能力档,ChatGPT 中以 GPT-6 Pro 名义提供给付费用户",
-          "note": "长上下文 >272K:输入$20/缓存$2/输出$75;无限时促销"
-        },
-        {
-          "name": "GPT-6 Luna",
-          "input": 0.1,
-          "cachedInput": 0.01,
-          "output": 0.5,
-          "aa": 37,
-          "ctx": 1050000,
-          "verified": true,
-          "features": "2026-09-22 发布,极低价高性能档,输入$0.1/百万tokens,适合高并发场景",
-          "note": "长上下文 >272K:输入$0.2/缓存$0.02/输出$0.75;无限时促销"
-        },
         {
           "name": "GPT-5.6 Sol",
           "input": 4,
@@ -251,17 +214,6 @@
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "models": [
         {
-          "name": "Gemini 3.8 Flash",
-          "input": 0.75,
-          "cachedInput": 0.075,
-          "output": 3.75,
-          "aa": null,
-          "ctx": 1000000,
-          "verified": true,
-          "features": "官方称最智能的 Flash 模型,专为长周期软件工程、自治 Agent 和企业级工作流设计",
-          "note": "促销价至 2026-12-31;2027-01-01 起涨至 $1.50/$0.15/$7.50;缓存存储 $0.50/百万tokens/小时"
-        },
-        {
           "name": "Gemini 3.1 Pro (preview)",
           "input": 2,
           "cachedInput": 0.2,
@@ -334,17 +286,6 @@
       "region": "intl",
       "source": "https://docs.x.ai/developers/pricing",
       "models": [
-        {
-          "name": "Grok 4.7",
-          "input": 2,
-          "cachedInput": 0.5,
-          "output": 6,
-          "aa": 46,
-          "ctx": 500000,
-          "verified": true,
-          "features": "2026-09-21 上线,推理深度支持 xhigh 档,价格与 4.6 持平但能力更强",
-          "note": "prompt ≥200K 长上下文:输入$4/缓存$1/输出$12;无限时促销"
-        },
         {
           "name": "Grok 4.6",
           "input": 2,
