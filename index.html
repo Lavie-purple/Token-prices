@@ -87,6 +87,7 @@
   footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
   .vnote { background: #161b22; border: 1px solid var(--border); border-radius: 10px;
     padding: 12px 16px; margin-bottom: 12px; color: var(--muted); font-size: 13px; display: none; }
+  #chart { user-select: none; -webkit-user-select: none; touch-action: none; }
   #chartbox:fullscreen { background:#0d1117; padding:24px; }
   #chartbox:fullscreen #chart { height: calc(100vh - 120px); }
 </style>
@@ -567,23 +568,40 @@ function drawChart(rows) {
       render();
     }, { passive: false });
     svg.addEventListener('pointerdown', e => {
-      dragging = { x: e.clientX, y: e.clientY };
+      e.preventDefault();            // 阻止拖拽时选中文本
+      dragging = { x: e.clientX, y: e.clientY, dx: 0, dy: 0, raf: 0 };
       draggingFlag = true;
       svg.setPointerCapture(e.pointerId);
       svg.style.cursor = 'grabbing';
     });
     svg.addEventListener('pointermove', e => {
       if (!dragging || !CH) return;
-      const rect = svg.getBoundingClientRect();
-      const sx = W / rect.width;
-      const dxLog = (e.clientX - dragging.x) * sx / (CH.W - CH.pad.l - CH.pad.r) * (CH.x1 - CH.x0);
-      const dyLog = (e.clientY - dragging.y) * sx / (CH.W - CH.pad.l - CH.pad.r) * (CH.y1 - CH.y0);
-      const { x0, x1, y0, y1 } = CH;
-      VIEW = { x0: x0 - dxLog, x1: x1 - dxLog, y0: y0 + dyLog, y1: y1 + dyLog };
-      dragging = { x: e.clientX, y: e.clientY };
-      render();
+      // 只累积位移，实际重绘合并到下一帧，避免每个 pointermove 都全量重建 SVG
+      dragging.dx += e.clientX - dragging.x;
+      dragging.dy += e.clientY - dragging.y;
+      dragging.x = e.clientX;
+      dragging.y = e.clientY;
+      if (dragging.raf) return;
+      dragging.raf = requestAnimationFrame(() => {
+        if (!dragging || !CH) return;
+        const rect = svg.getBoundingClientRect();
+        const sx = W / rect.width;
+        const { x0, x1, y0, y1 } = CH;
+        const dxLog = dragging.dx * sx / (CH.W - CH.pad.l - CH.pad.r) * (x1 - x0);
+        const dyLog = dragging.dy * sx / (CH.W - CH.pad.l - CH.pad.r) * (y1 - y0);
+        VIEW = { x0: x0 - dxLog, x1: x1 - dxLog, y0: y0 + dyLog, y1: y1 + dyLog };
+        dragging.dx = 0; dragging.dy = 0;
+        dragging.raf = 0;
+        render();
+      });
     });
-    svg.addEventListener('pointerup', () => { dragging = null; draggingFlag = false; svg.style.cursor = 'grab'; });
+    const endDrag = () => {
+      if (dragging && dragging.raf) { cancelAnimationFrame(dragging.raf); dragging.raf = 0; }
+      dragging = null; draggingFlag = false; svg.style.cursor = 'grab';
+    };
+    svg.addEventListener('pointerup', endDrag);
+    svg.addEventListener('pointercancel', endDrag);
+    svg.addEventListener('pointerleave', endDrag);
     svg.addEventListener('dblclick', () => { VIEW = null; render(); });
   }
 
