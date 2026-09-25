@@ -51,6 +51,21 @@
   .badge { font-size: 11px; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
   .badge.unverified { background: #d2992222; color: var(--amber); border: 1px solid #d2992255; }
   .badge.verified { background: #3fb95022; color: var(--green); border: 1px solid #3fb95055; }
+  /* 新模型标记(发布 30 天内) */
+  .newtag {
+    display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; line-height: 17px; vertical-align: 1px;
+    color: #fff; background: linear-gradient(135deg, #2f81f7, #a371f7);
+    box-shadow: 0 0 8px rgba(127, 127, 255, .45);
+  }
+  /* 图中光圈呼吸效果,仅新模型使用;系统开启"减少动态效果"时自动静止 */
+  @keyframes newpulse {
+    0%   { r: var(--r0); opacity: .75; stroke-width: 2; }
+    70%  { r: calc(var(--r0) * 2.6); opacity: 0; stroke-width: .5; }
+    100% { r: calc(var(--r0) * 2.6); opacity: 0; stroke-width: .5; }
+  }
+  .newring { animation: newpulse 2.2s ease-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .newring { animation: none; opacity: .6; } }
   .note { color: var(--muted); font-size: 12px; }
   .null { color: #484f58; }
   .hist { color: #d29922; cursor: help; }
@@ -97,6 +112,7 @@
       <b>四象限价格对比</b>
       <span class="note">
         <span style="color:#58a6ff">● 国际</span> <span style="color:#f0883e">● 国内</span>
+        <span style="color:#a371f7">◉ 新模型(发布30天内)</span>
         · 对数刻度 · 左下=性价比优 · 点越大 AA 评分越高 · 密集区不标注名称,悬停查看 · <b>滚轮缩放 / 拖拽平移 / 双击复位</b>,放大后自动显示更多名称 · <span id="hiddennote"></span>
       </span>
     </div>
@@ -193,6 +209,18 @@ function fmt(v, cur) {
   return '¥' + v;
 }
 
+const NEW_WINDOW_DAYS = 30; // 发布 30 天内视为「新」
+
+// 是否新模型:按发布日期动态计算,过期后自动去掉标记,无需改动数据
+function isNew(m) {
+  if (!m || !m.released) return false;
+  const t = Date.parse(m.released);
+  if (isNaN(t)) return false;
+  const days = (Date.now() - t) / 86400000;
+  return days >= 0 && days <= NEW_WINDOW_DAYS;
+}
+const newTag = () => '<span class="newtag" title="发布 30 天内的新模型">新</span>';
+
 function fmtCtx(v) {
   if (v == null) return '<span class="null">—</span>';
   if (v >= 1000000) return (v % 1000000 ? (v / 1000000).toFixed(2) : v / 1000000) + 'M';
@@ -259,7 +287,7 @@ function render() {
   document.getElementById('tbody').innerHTML = rows.map(({ v, m }) => `
     <tr>
       <td class="vendor" data-label=""><span class="tag ${v.region}">${v.region === 'cn' ? '国内' : '国际'}</span>${v.name}</td>
-      <td data-label="模型:">${m.name}</td>
+      <td data-label="模型:">${m.name}${isNew(m) ? newTag() : ''}</td>
       <td class="num" data-label="性能:">${m.aa != null ? '<b>' + m.aa + '</b><span class="null"> AA</span>' : '<span class="null">—</span>'}${m.swe != null ? '<br><span class="note">SWE ' + m.swe + '%</span>' : ''}</td>
       <td class="num" data-label="上下文:">${fmtCtx(m.ctx)}</td>
       <td class="num" data-label="缓存命中输入:">${m.cachedInput != null ? fmt(m.cachedInput, v.currency) : fmtHist(m, 'cached', v.currency)}</td>
@@ -376,7 +404,7 @@ function drawChart(rows) {
       const h = HIST && HIST[m.name];
       const vi = m.input ?? (h ? h.input : null);
       const vo = m.output ?? (h ? h.output : null);
-      return { name: m.name, vendor: v.name, region: v.region, aa: m.aa,
+      return { name: m.name, vendor: v.name, region: v.region, aa: m.aa, fresh: isNew(m),
         x: vi != null && vi > 0 ? (v.currency === 'CNY' ? vi : vi * rate2) : null,
         y: vo != null && vo > 0 ? (v.currency === 'CNY' ? vo : vo * rate2) : null,
         hist: (m.input == null && vi != null) || (m.output == null && vo != null) };
@@ -441,14 +469,21 @@ function drawChart(rows) {
     const q = p.x <= mx && p.y <= my ? ' ◎双低' : '';
     const fillO = p.hist ? 0.3 : 0.75; // 半透明 = 含历史回退数据
     const r2c = n => '¥' + (Math.round(n * 100) / 100);
-    g += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${r}" fill="${c}" fill-opacity="${fillO}" stroke="${c}" ${p.hist ? 'stroke-dasharray="3 2"' : ''}>`
-       + `<title>${p.vendor} · ${p.name}\n输入 ${r2c(p.x)} / 输出 ${r2c(p.y)} 每百万tokens${p.hist ? '(含历史回退数据)' : ''}${p.aa != null ? '\nAA 智能指数 ' + p.aa : ''}${q}</title></circle>`;
+    // 新模型:在点外加一圈呼吸光圈(不闪烁主体,避免视觉疲劳)
+    if (p.fresh) {
+      g += `<circle class="newring" cx="${X(p.x)}" cy="${Y(p.y)}" r="${r}"
+        style="--r0:${r}px" fill="none" stroke="#a371f7" stroke-width="2" opacity=".75"
+        pointer-events="none"/>`;
+    }
+    g += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${r}" fill="${c}" fill-opacity="${fillO}" stroke="${c}" ${p.hist ? 'stroke-dasharray="3 2"' : ''} ${p.fresh ? 'stroke="#a371f7" stroke-width="2"' : ''}>` +
+      `<title>${p.vendor} · ${p.name}${p.fresh ? '\n★ 发布 30 天内的新模型' : ''}\n输入 ${r2c(p.x)} / 输出 ${r2c(p.y)} 每百万tokens${p.hist ? '(含历史回退数据)' : ''}${p.aa != null ? '\nAA 智能指数 ' + p.aa : ''}${q}</title></circle>`;
   }
   // 标注模型名:AA 分高的先放(位置更优);密集簇内的点(60px 半径内 ≥4 个邻居)不标注,悬停可查看
   const boxes = []; // 已放置的标签包围盒,用于避让
   const overlaps = (x, y, w, h) => boxes.some(b =>
     x < b.x + b.w && x + w > b.x && y < b.y + b.h && y + h > b.y);
-  const labelOrder = [...vis].sort((a, b) => (b.aa ?? -1) - (a.aa ?? -1));
+  const labelOrder = [...vis].sort((a, b) =>
+    (b.fresh ? 1 : 0) - (a.fresh ? 1 : 0) || (b.aa ?? -1) - (a.aa ?? -1));
   const pos = new Map(vis.map(p => [p, { x: X(p.x), y: Y(p.y) }]));
   let hidden = vis.length;
   for (const p of labelOrder) {
@@ -458,7 +493,7 @@ function drawChart(rows) {
       const d = pos.get(q);
       return n + ((px - d.x) ** 2 + (py - d.y) ** 2 <= 42 * 42 ? 1 : 0);
     }, 0);
-    if (neighbors >= 5) { continue; } // 密集簇,跳过标注
+    if (neighbors >= 5 && !p.fresh) { continue; } // 密集簇跳过;新模型例外
     hidden--;
     const tw = p.name.length * 11 + 4; // 近似文字宽度
     const th = 13;
@@ -486,7 +521,7 @@ function drawChart(rows) {
     if (withLine)
       g += `<line x1="${px}" y1="${py}" x2="${placed[3]}" y2="${placed[4]}" stroke="#8b949e" stroke-width="0.8"/>`;
     g += `<text x="${placed[2] === 'end' ? placed[0] + tw : placed[2] === 'middle' ? placed[0] + tw / 2 : placed[0]}" `
-       + `y="${placed[1] + 10}" fill="${p.aa != null ? '#e6edf3' : '#8b949e'}" font-size="10.5" text-anchor="${placed[2]}" ${withLine ? 'paint-order="stroke" stroke="#0d1117" stroke-width="3"' : ''}>${p.name}</text>`;
+       + `y="${placed[1] + 10}" fill="${p.aa != null ? '#e6edf3' : '#8b949e'}" font-size="10.5" text-anchor="${placed[2]}" ${withLine ? 'paint-order="stroke" stroke="#0d1117" stroke-width="3"' : ''}>${p.fresh ? '<tspan fill="#a371f7" font-weight="700">新·</tspan>' : ''}${p.name}</text>`;
   }
 
   g += `<text x="${(W + pad.l) / 2}" y="${H - 6}" fill="#8b949e" font-size="12" text-anchor="middle">输入价(¥/百万 tokens,对数)</text>`
