@@ -3,7 +3,7 @@
   "exchange": {
     "usdToCny": 7.2
   },
-  "lastUpdated": "2026-10-24",
+  "lastUpdated": "2026-10-25",
   "vendors": [
     {
       "id": "openai",
@@ -11,6 +11,18 @@
       "region": "intl",
       "source": "https://platform.openai.com/docs/pricing",
       "models": [
+        {
+          "name": "GPT-6.1 Sol",
+          "input": 2,
+          "cachedInput": 0.1,
+          "output": 10,
+          "aa": 52,
+          "ctx": 1050000,
+          "verified": true,
+          "released": "2026-09-29",
+          "features": "GPT-6 Sol 的升级版,缓存输入价直接砍半($0.20→$0.10),1M 上下文",
+          "note": "缓存 $0.10 为标准价;促销至少持续到 2026-11-21;发布约 7 天后即实质取代 GPT-6 Sol"
+        },
         {
           "name": "GPT-6 Sol",
           "input": 2,
@@ -20,7 +32,7 @@
           "ctx": 1050000,
           "verified": true,
           "features": "2026-09-22 发布的新一代主力,1M 上下文,长上下文(>272K)输入价翻倍、输出×1.5",
-          "note": "长上下文 >272K:输入$4/缓存$0.4/输出$15;Batch 五折;Fast 两倍;无限时促销；2026-09-22 发布;release 字段用于「发布 30 天内」的新模型标记",
+          "note": "已被 GPT-6.1 Sol 取代(缓存价减半),建议新项目用 6.1 Sol;长上下文 >272K:输入$4/缓存$0.4/输出$15",
           "released": "2026-09-22"
         },
         {
@@ -187,6 +199,42 @@
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
       "models": [
         {
+          "name": "Claude Opus 5.5",
+          "input": 4,
+          "cachedInput": 0.1,
+          "output": 20,
+          "aa": 58,
+          "ctx": 200000,
+          "verified": true,
+          "released": "2026-09-22",
+          "features": "新一代旗舰,AA 58 为全榜第一(AA 历史最高),价格仅为 Opus 5 的一半",
+          "note": "缓存读取 $0.10(输入价 2.5%);Terminal-Bench 4.0 66.4%;200K 上下文/输出 64K"
+        },
+        {
+          "name": "Claude Sonnet 5.5",
+          "input": 2,
+          "cachedInput": 0.1,
+          "output": 10,
+          "aa": 56,
+          "ctx": 1000000,
+          "verified": true,
+          "released": "2026-09-28",
+          "features": "与 Sonnet 5 同价但综合更强(AA 56 超过 GPT-6 Astra),1M 上下文",
+          "note": "缓存读取 2026-10-07 降价 50% 至 $0.10;注意评估中 token 消耗偏高"
+        },
+        {
+          "name": "Claude Haiku 5.5",
+          "input": 0.1,
+          "cachedInput": 0.01,
+          "output": 0.5,
+          "aa": 46,
+          "ctx": 200000,
+          "verified": true,
+          "released": "2026-10-07",
+          "features": "小模型 AA 历史最高分(46),比 Haiku 4.5 平均便宜约 75%,性价比怪物",
+          "note": "分档定价:prompt≤100K 时 $0.10/$0.50;>100K 时 $0.50/$2.50"
+        },
+        {
           "name": "Claude Fable 5",
           "input": 10,
           "cachedInput": 1,
@@ -201,12 +249,12 @@
         {
           "name": "Claude Fable 5.1",
           "input": 10,
-          "cachedInput": 1,
+          "cachedInput": 0.25,
           "output": 50,
           "aa": 62,
           "ctx": 1000000,
           "features": "Fable 5 的优化版,价格和性能相同,Anthropic 官方定价页已列出",
-          "note": "官方定价页确认:价格同 Fable 5 (0//0)",
+          "note": "缓存读取 2026-10 降 4 倍至 $0.25(输入价 2.5%);承诺至少服务到 2027-09-01",
           "verified": true,
           "released": "2026-09-01",
           "releasedSource": "官方新闻页"
@@ -217,7 +265,7 @@
           "cachedInput": 0.5,
           "output": 25,
           "features": "编码与复杂推理旗舰,Claude Code 默认,长上下文准确度高",
-          "note": "Opus 4.5–4.8 同价;fast mode 为 $10/$50",
+          "note": "已被 Opus 5.5 以约半价($4/$20 vs $8/$40)接替旗舰位置;未单独下架",
           "verified": true,
           "aa": 63,
           "ctx": 1000000,
@@ -229,7 +277,7 @@
           "cachedInput": 0.2,
           "output": 10,
           "features": "均衡之选,编码/Agent/日常任务质量接近 Opus,价格仅 2/5",
-          "note": "Sonnet 4.5/4.6 为 $3/$0.30/$15",
+          "note": "官方弃用文档:不早于 2027 Q1 退役;被同价的 Sonnet 5.5 替代",
           "verified": true,
           "aa": 55,
           "ctx": 1000000,
@@ -253,6 +301,18 @@
       "region": "intl",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "models": [
+        {
+          "name": "Gemini 4 Argon",
+          "input": 2,
+          "cachedInput": 0.1,
+          "output": 10,
+          "aa": 53,
+          "ctx": 1000000,
+          "verified": true,
+          "released": "2026-09-30",
+          "features": "Gemini 4 系列首个文本模型,定位前沿推理(编码/数学科学/自主 Agent/网络防御),支持 1M token 长输出",
+          "note": "促销价截止 2026-11-30,之后 $4/$0.20/$20;2026-10-13 在 Gemini API 与 Google Cloud GA"
+        },
         {
           "name": "Gemini 3.8 Flash",
           "input": 0.75,
@@ -887,6 +947,30 @@
       "source": "https://platform.kimi.com/",
       "currency": "CNY",
       "models": [
+        {
+          "name": "Kimi K3.1 Pro",
+          "input": 13,
+          "cachedInput": 1.3,
+          "output": 68,
+          "aa": 55,
+          "ctx": 1000000,
+          "verified": true,
+          "released": "2026-10-24",
+          "features": "3 万亿级参数、原生视觉的最强旗舰,AA 55(开源权重第一)",
+          "note": "cache write ¥13/cache hit ¥1.30;K3(¥20/¥100)仍在售未下架"
+        },
+        {
+          "name": "Kimi K3.1 Pro Highspeed",
+          "input": 26,
+          "cachedInput": 1.3,
+          "output": 136,
+          "aa": null,
+          "ctx": 1000000,
+          "verified": true,
+          "released": "2026-10-24",
+          "features": "K3.1 Pro 高速版,速度约 3 倍,价格翻倍",
+          "note": "cache hit 同为 ¥1.30"
+        },
         {
           "name": "Kimi K3",
           "input": 20,
