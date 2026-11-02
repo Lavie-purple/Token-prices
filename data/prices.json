@@ -3,7 +3,7 @@
   "exchange": {
     "usdToCny": 7.2
   },
-  "lastUpdated": "2026-11-02",
+  "lastUpdated": "2026-11-03",
   "vendors": [
     {
       "id": "openai",
@@ -22,6 +22,17 @@
           "released": "2026-09-29",
           "features": "GPT-6 Sol 的升级版,缓存输入价直接砍半($0.20→$0.10),1M 上下文",
           "note": "缓存 $0.10 为标准价;促销至少持续到 2026-11-21;发布约 7 天后即实质取代 GPT-6 Sol"
+        },
+        {
+          "name": "GPT-6.1 Terra",
+          "input": 1,
+          "cachedInput": 0.05,
+          "output": 5,
+          "aa": null,
+          "ctx": 1050000,
+          "verified": true,
+          "features": "6.1 系列中档:视觉推理、精准计算机操作、自然写作;速度与效率导向",
+          "note": "缓存写入 $1.25/百万(30 分钟保留);长上下文 >272K 输入×2、输出×1.5;Batch 五折;Fast 两倍"
         },
         {
           "name": "GPT-6 Sol",
@@ -791,6 +802,17 @@
       "source": "https://platform.minimaxi.com/docs/guides/pricing-paygo",
       "currency": "CNY",
       "models": [
+        {
+          "name": "MiniMax-M3.1-Flash",
+          "input": 1,
+          "cachedInput": 0.1,
+          "output": 4,
+          "aa": null,
+          "ctx": null,
+          "verified": true,
+          "features": "新一代 M3.1 系列首发型号,官方定位 Flash 档,输入 ¥1/输出 ¥4 比 M3 便宜一半",
+          "note": "官方定价页确认(2026-11);上下文窗口官方页未标注"
+        },
         {
           "name": "MiniMax-M3",
           "input": 2.1,
