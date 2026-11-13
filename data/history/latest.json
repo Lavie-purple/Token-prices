@@ -3,7 +3,7 @@
   "exchange": {
     "usdToCny": 7.2
   },
-  "lastUpdated": "2026-11-12",
+  "lastUpdated": "2026-11-14",
   "vendors": [
     {
       "id": "openai",
@@ -28,11 +28,13 @@
           "input": 1,
           "cachedInput": 0.05,
           "output": 5,
-          "aa": null,
+          "aa": 51,
           "ctx": 1050000,
           "verified": true,
           "features": "6.1 系列中档:视觉推理、精准计算机操作、自然写作;速度与效率导向",
-          "note": "缓存写入 $1.25/百万(30 分钟保留);长上下文 >272K 输入×2、输出×1.5;Batch 五折;Fast 两倍"
+          "note": "缓存写入 $1.25/百万(30 分钟保留);长上下文 >272K 输入×2、输出×1.5;Batch 五折;Fast 两倍",
+          "released": "2026-10-26",
+          "releasedSource": "AA 模型页"
         },
         {
           "name": "GPT-6 Sol",
@@ -210,16 +212,29 @@
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
       "models": [
         {
+          "name": "Claude Fable 5.2",
+          "input": 8,
+          "cachedInput": 0.2,
+          "output": 40,
+          "aa": 65,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "Anthropic 当前最强推理模型:复杂推理与长程 Agent 任务;缓存读取仅 0.025 倍($0.20)",
+          "note": "缓存写入 $10(5min)/$16(1h);Batch 五折;发布日期来自官方模型库 releasedOn",
+          "released": "2026-11-09",
+          "releasedSource": "官方模型库 releasedOn"
+        },
+        {
           "name": "Claude Opus 5.5",
           "input": 4,
-          "cachedInput": 0.1,
+          "cachedInput": 0.2,
           "output": 20,
           "aa": 58,
           "ctx": 200000,
           "verified": true,
           "released": "2026-09-22",
           "features": "新一代旗舰,AA 58 为全榜第一(AA 历史最高),价格仅为 Opus 5 的一半",
-          "note": "缓存读取 $0.10(输入价 2.5%);Terminal-Bench 4.0 66.4%;200K 上下文/输出 64K"
+          "note": "缓存读取 $0.10(输入价 2.5%);Terminal-Bench 4.0 66.4%;200K 上下文/输出 64K ★2026-11-14 勘误:缓存读取官方定价页实为 $0.20(0.05 倍率),原记 $0.10 有误"
         },
         {
           "name": "Claude Sonnet 5.5",
@@ -312,6 +327,32 @@
       "region": "intl",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "models": [
+        {
+          "name": "Gemini 4 Carbon",
+          "input": 2,
+          "cachedInput": 0.1,
+          "output": 10,
+          "aa": 60,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "Google 当前旗舰:复杂软件工程、数学科学求解、高准确性自主多步 Agent、长解码至 1M",
+          "note": "促销价至 2026-11-30,之后 $4/$0.20/$20;免费层不可用;思考 tokens 计费",
+          "released": "2026-10-28",
+          "releasedSource": "官方博客+AA 模型页"
+        },
+        {
+          "name": "Gemini 4 Hydrogen",
+          "input": 0.75,
+          "cachedInput": 0.0375,
+          "output": 3.75,
+          "aa": 54,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "高速廉价档(承接 Gemini 3.8 Flash 定位),1M 上下文,长解码 1M",
+          "note": "促销价至 2026-12-31,之后 $1.50/$0.15/$7.50",
+          "released": "2026-11-12",
+          "releasedSource": "AA 模型页"
+        },
         {
           "name": "Gemini 4 Argon",
           "input": 2,
@@ -717,6 +758,43 @@
       "note": "当前数据基于阿里云百炼官方价格(bigmodel.cn 动态加载);GLM-5.1 2026-08 下旬上线",
       "models": [
         {
+          "name": "GLM-5.3",
+          "input": 8,
+          "cachedInput": 2,
+          "output": 28,
+          "aa": 32,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "智谱新旗舰:~7430 亿参数 MoE,编程最强开源权重之一;恒开思考(low/high/max),最大输出 128K",
+          "note": "官方定价页确认;缓存存储限时免费;与 GLM-5.2 同价",
+          "released": "2026-08-18",
+          "releasedSource": "AA 模型页"
+        },
+        {
+          "name": "GLM-5.3-Flash",
+          "input": 0.8,
+          "cachedInput": 0.23,
+          "output": 2.8,
+          "aa": null,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "GLM-5 系列首个原生多模态(320B-A18B):文本/图片/视频/文件输入,极致低成本",
+          "note": "官方定价页确认;另有 FlashX ¥2/¥7、FlashX-Legal ¥2/¥7",
+          "released": "2026-08-26",
+          "releasedSource": "媒体报道"
+        },
+        {
+          "name": "GLM-5.2",
+          "input": 8,
+          "cachedInput": 2,
+          "output": 28,
+          "aa": null,
+          "ctx": 1000000,
+          "verified": true,
+          "features": "上代旗舰(已被 GLM-5.3 取代),基座同 5.2 版,1M 上下文",
+          "note": "官方定价页确认;与 GLM-5.3 同价;缓存存储限时免费"
+        },
+        {
           "name": "GLM-5",
           "input": 4,
           "cachedInput": 1,
@@ -974,12 +1052,12 @@
           "input": 13,
           "cachedInput": 1.3,
           "output": 68,
-          "aa": 55,
+          "aa": 46,
           "ctx": 1000000,
           "verified": true,
           "released": "2026-10-24",
           "features": "3 万亿级参数、原生视觉的最强旗舰,AA 55(开源权重第一)",
-          "note": "cache write ¥13/cache hit ¥1.30;K3(¥20/¥100)仍在售未下架"
+          "note": "cache write ¥13/cache hit ¥1.30;K3(¥20/¥100)仍在售未下架 ★2026-11-14 勘误:AA 智能指数实为 46(今日两次读取 AA 一致 46.45),原记 55 有误"
         },
         {
           "name": "Kimi K3.1 Pro Highspeed",
